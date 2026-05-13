@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Shaved Word — How the Ainu Spoke to Their Gods</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-deep: #0f0f1a;
+      --bg-dark: #1a1a2e;
+      --bg-card: #1e1e35;
+      --accent-gold: #d4a574;
+      --accent-warm: #e8c49a;
+      --accent-light: #f0dfc0;
+      --text-primary: #e8e0d0;
+      --text-secondary: #b8afa0;
+      --text-muted: #7a7060;
+      --font-head: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Source Sans 3', 'Helvetica Neue', sans-serif;
+      --max-w: 1100px;
+    }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.75;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: rgba(212,165,116,0.3); color: var(--accent-light); }
+
+    /* NAV */
+    #nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+      padding: 0 2rem; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(212,165,116,0.12);
+      transition: all 0.3s;
+    }
+    #nav.scrolled { background: rgba(10,10,20,0.96); box-shadow: 0 4px 32px rgba(0,0,0,0.5); }
+    .nav-brand {
+      font-family: var(--font-head); font-size: 1.1rem; font-weight: 500;
+      color: var(--accent-gold); text-decoration: none; letter-spacing: 0.04em;
+    }
+    .nav-links { display: flex; list-style: none; gap: 0.2rem; }
+    .nav-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 0.75rem;
+      font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.4rem 0.7rem; border-radius: 3px; transition: all 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent-gold); background: rgba(212,165,116,0.08); }
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--accent-gold); margin: 5px 0; border-radius: 2px; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 2rem;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(212,165,116,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 60%, rgba(200,137,42,0.04) 0%, transparent 50%),
+        repeating-linear-gradient(90deg, transparent, transparent 100px, rgba(212,165,116,0.015) 100px, rgba(212,165,116,0.015) 101px),
+        repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(212,165,116,0.01) 80px, rgba(212,165,116,0.01) 81px),
+        var(--bg-deep);
+      position: relative;
+    }
+    .hero::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 200px;
+      background: linear-gradient(transparent, var(--bg-deep));
+    }
+    .hero-overline {
+      font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent-gold);
+      margin-bottom: 1.5rem; opacity: 0.8;
+    }
+    .hero h1 {
+      font-family: var(--font-head); font-weight: 300; font-size: clamp(3rem, 8vw, 6rem);
+      color: var(--accent-light); line-height: 1.1; margin-bottom: 0.5rem;
+    }
+    .hero h2 {
+      font-family: var(--font-head); font-weight: 400; font-style: italic;
+      font-size: clamp(1.2rem, 3vw, 1.8rem); color: var(--accent-gold);
+      margin-bottom: 2rem; opacity: 0.9;
+    }
+    .hero-tagline {
+      max-width: 600px; font-size: 1.05rem; color: var(--text-secondary);
+      line-height: 1.8; margin-bottom: 3rem;
+    }
+    .scroll-indicator {
+      position: absolute; bottom: 40px; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      animation: float 3s ease-in-out infinite;
+    }
+    .scroll-indicator span { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+    .scroll-indicator .arrow { width: 1px; height: 30px; background: var(--accent-gold); position: relative; }
+    .scroll-indicator .arrow::after {
+      content: ''; position: absolute; bottom: 0; left: -4px;
+      border-left: 5px solid transparent; border-right: 5px solid transparent;
+      border-top: 6px solid var(--accent-gold);
+    }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+    /* SECTIONS */
+    .section { padding: 6rem 2rem; max-width: var(--max-w); margin: 0 auto; }
+    .section.full { max-width: 100%; padding: 6rem 0; }
+    .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* INTRO */
+    .intro-section { max-width: 800px; margin: 0 auto; padding: 6rem 2rem; }
+    .intro-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent-gold); margin-bottom: 2rem;
+    }
+    .intro-text p { margin-bottom: 1.5rem; font-size: 1.05rem; color: var(--text-primary); }
+    .intro-text p:first-of-type::first-letter {
+      float: left; font-family: var(--font-head); font-size: 4.5rem;
+      line-height: 0.8; padding-right: 0.15em; padding-top: 0.05em;
+      color: var(--accent-gold); font-weight: 600;
+    }
+    .intro-text em { color: var(--accent-warm); font-style: italic; }
+
+    /* STORY BRIDGE */
+    .story-bridge {
+      text-align: center; padding: 5rem 2rem; position: relative;
+      background: linear-gradient(var(--bg-deep), rgba(30,30,53,0.5), var(--bg-deep));
+    }
+    .story-bridge h2 {
+      font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400; color: var(--accent-light); margin-bottom: 1rem;
+    }
+    .story-bridge p { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+    /* THREAD LINE */
+    .thread-container {
+      position: relative; max-width: var(--max-w); margin: 0 auto;
+    }
+    .thread-container::before {
+      content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px; background: linear-gradient(var(--accent-gold), rgba(212,165,116,0.1));
+      transform: translateX(-50%); z-index: 0;
+    }
+
+    /* TRANSITION QUOTES */
+    .transition-quote {
+      text-align: center; padding: 4rem 2rem; position: relative; z-index: 1;
+    }
+    .transition-quote p {
+      font-family: var(--font-head); font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-style: italic; color: var(--accent-gold); opacity: 0.85;
+      max-width: 500px; margin: 0 auto;
+    }
+    .transition-quote .dot {
+      display: block; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent-gold); margin: 1.5rem auto 0;
+      box-shadow: 0 0 12px rgba(212,165,116,0.4);
+    }
+
+    /* ARTIFACT CARDS */
+    .artifact {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+      align-items: center; padding: 4rem 2rem; position: relative; z-index: 1;
+      max-width: var(--max-w); margin: 0 auto;
+    }
+    .artifact.reverse { direction: rtl; }
+    .artifact.reverse > * { direction: ltr; }
+    .artifact-number {
+      font-family: var(--font-head); font-size: 5rem; font-weight: 300;
+      color: rgba(212,165,116,0.12); line-height: 1; margin-bottom: 0.5rem;
+    }
+    .artifact-name {
+      font-family: var(--font-head); font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 500; color: var(--accent-light); margin-bottom: 0.3rem;
+    }
+    .artifact-ainu {
+      font-family: var(--font-head); font-style: italic; font-size: 1rem;
+      color: var(--accent-gold); margin-bottom: 1.5rem; opacity: 0.8;
+    }
+    .artifact-text { font-size: 1rem; color: var(--text-primary); line-height: 1.8; }
+    .artifact-img {
+      width: 100%; aspect-ratio: 4/5; border-radius: 6px; overflow: hidden;
+      background: var(--bg-card); border: 1px solid rgba(212,165,116,0.1);
+      position: relative;
+    }
+    .artifact-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: sepia(15%) contrast(1.05);
+      transition: transform 0.6s ease, filter 0.6s ease;
+    }
+    .artifact-img:hover img { transform: scale(1.03); filter: sepia(5%) contrast(1.1); }
+    .artifact-img .img-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1rem; font-size: 0.7rem; color: var(--text-muted);
+      background: linear-gradient(transparent, rgba(15,15,26,0.9));
+      text-align: right; letter-spacing: 0.05em;
+    }
+
+    /* WORKS CITED */
+    .cited-section {
+      max-width: 800px; margin: 0 auto; padding: 6rem 2rem;
+      border-top: 1px solid rgba(212,165,116,0.1);
+    }
+    .cited-section h2 {
+      font-family: var(--font-head); font-size: 1.8rem; font-weight: 400;
+      color: var(--accent-light); margin-bottom: 2rem;
+    }
+    .cited-section p {
+      font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;
+      padding-left: 2rem; text-indent: -2rem; line-height: 1.7;
+      word-break: break-word;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 3rem 2rem;
+      border-top: 1px solid rgba(212,165,116,0.08);
+      font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.1em;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0;
+        flex-direction: column; background: rgba(10,10,20,0.98); padding: 1rem 2rem;
+        border-bottom: 1px solid rgba(212,165,116,0.1);
+      }
+      .nav-links.open { display: flex; }
+      .nav-toggle { display: flex; flex-direction: column; }
+      .artifact { grid-template-columns: 1fr; gap: 2rem; }
+      .artifact.reverse { direction: ltr; }
+      .thread-container::before { display: none; }
+      .artifact-img { aspect-ratio: 3/2; }
+    }
+
+    /* PRINT */
+    @media print {
+      body { background: white; color: #222; }
+      #nav, .scroll-indicator, .thread-container::before { display: none; }
+      .hero { min-height: auto; padding: 2rem; background: white; }
+      .hero h1 { color: #333; font-size: 2rem; }
+      .hero h2 { color: #555; }
+      .artifact { grid-template-columns: 1fr; page-break-inside: avoid; }
+      .artifact-img { max-height: 300px; }
+      .fade-in { opacity: 1; transform: none; }
+      .transition-quote p { color: #555; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav id="nav">
+  <a href="#hero" class="nav-brand">The Shaved Word</a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links">
+    <li><a href="#intro">Introduction</a></li>
+    <li><a href="#artifacts">Artifacts</a></li>
+    <li><a href="#cited">Works Cited</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-overline">Indigenous Cultures Research Project</div>
+  <h1>The Shaved Word</h1>
+  <h2>How the Ainu Spoke to Their Gods</h2>
+  <p class="hero-tagline">In Ainu culture, every act of taking from the world required a handmade prayer. This is that prayer.</p>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- INTRODUCTION -->
+<section class="intro-section fade-in" id="intro">
+  <div class="intro-label">Introduction</div>
+  <div class="intro-text">
+    <p>Look at the object in the case to your right. It's a stick — roughly the length of your forearm, carved from willow wood. But near the top, the bark has been shaved back in long, thin curls that spiral outward and freeze mid-air, like a sentence caught mid-breath. That object is called an <em>inaw</em>. And for the Ainu people of northern Japan, it is not decoration. It is not art. It is a message — handwritten in wood and sent directly to a god.</p>
+
+    <p>The Ainu are the indigenous people of Hokkaido, Japan's northernmost island, as well as parts of Sakhalin and the Kuril Islands. Their ancestry traces back to the Jōmon people, who inhabited the Japanese archipelago for over 10,000 years before the Yayoi migrations reshaped the region. The word <em>Ainu</em> means simply "human being" — a name that says everything about how they understood their place in the world: not as masters of nature, not as subjects of an emperor, but as participants in a living cosmos.</p>
+
+    <p>That cosmos was governed by <em>kamuy</em>. In Ainu belief, the natural world is not simply scenery. Every bear, every salmon, every fire, every wind is a <em>kamuy</em> — a divine spirit — visiting the human realm in disguise. The bear you hunt is not prey. It is a god who has chosen to give you its body. The fire in your hearth is not a tool. It is a <em>kamuy</em> with memory and feelings, watching over your home. And like any relationship, this one demanded respect, communication, and reciprocity. You could not take without giving something back. You could not act without first asking permission.</p>
+
+    <p>That's where the <em>inaw</em> came in.</p>
+
+    <p>Every significant act of Ainu life — lighting a fire, casting a fishing net, building a house, setting out on a journey, welcoming a child, mourning the dead, treating an illness, taking a husband or wife — required an <em>inaw</em>. A man would sit down, take a willow branch, and begin shaving. The specific curl pattern, the number of shavings, the type of wood: these were not random. They were grammar. The act of shaving <em>was</em> the composition. The curled shavings <em>were</em> the meaning. When the <em>inaw</em> was placed at a sacred window, beside a river, on a grave, or at a community altar called a <em>nusa</em>, the message had been sent. When the wood eventually rotted and returned to the earth, the prayer had been received.</p>
+
+    <p>There was no Ainu life without <em>inaw</em>. It was not a ritual set apart from daily existence — it <em>was</em> daily existence. No other culture on Earth made prayer this way.</p>
+
+    <p>For much of the 20th century, that way of life was nearly erased. Japan's 1899 Protection Act stripped the Ainu of their lands, banned their language in schools, and forced assimilation. Generations grew up unable to speak their own tongue or practice their own ceremonies. But the culture did not die. In 2019, Japan officially recognized the Ainu as an indigenous people for the first time. The following year, the Upopoy National Ainu Museum opened in Hokkaido — a landmark act of acknowledgment and revival.</p>
+
+    <p>The five artifacts in this exhibit each open a different door into the <em>inaw</em>'s world: the hearth, the hunt, the life cycle, the sacred space, and the modern hand still shaving wood today. Walk through them. The message is still being written.</p>
+  </div>
+</section>
+
+<!-- STORY BRIDGE -->
+<section class="story-bridge fade-in" id="artifacts">
+  <h2>Five Objects. One Story.</h2>
+  <p>Every Ainu prayer began with wood and a blade. Here are five objects that tell that story.</p>
+</section>
+
+<!-- ARTIFACTS -->
+<div class="thread-container">
+
+  <!-- Transition 1 -->
+  <div class="transition-quote fade-in">
+    <p>It begins with a blade and a branch…</p>
+    <span class="dot"></span>
+  </div>
+
+  <!-- ARTIFACT 1: INAW -->
+  <article class="artifact fade-in">
+    <div class="artifact-content">
+      <div class="artifact-number">01</div>
+      <h3 class="artifact-name">The Inaw</h3>
+      <div class="artifact-ainu">Sacred Shaved Sticks · イナウ</div>
+      <p class="artifact-text">The inaw is the Ainu's most essential spiritual tool — a slender stick of willow, birch, or bamboo grass, roughly thirty centimeters long, whose magic lies entirely in its making. A craftsman shaves the wood in careful, deliberate strokes, leaving the curling ribbons of bark attached. Those curls are not decoration; they are the message itself — the "shaved word" spoken to the kamuy, the spirits who govern every corner of the natural world. Each inaw is custom-made: different gods require different shaving styles, different woods, different arrangements of curls. An inaw might stand at a hearth, a fishing ground, a sickbed, or a wedding. As it slowly weathers and falls apart, the Ainu understood that this was not decay — it was confirmation. The message had arrived.</p>
+    </div>
+    <div class="artifact-img">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Inaw.jpg" alt="Inaw ceremonial sticks at the Kayano Shigeru Nibutani Ainu Museum" loading="lazy" />
+      <div class="img-caption">Inaw at the Kayano Shigeru Nibutani Ainu Museum, Hokkaido · Wikimedia Commons</div>
+    </div>
+  </article>
+
+  <!-- Transition 2 -->
+  <div class="transition-quote fade-in">
+    <p>One prayer is personal. A thousand prayers become a village…</p>
+    <span class="dot"></span>
+  </div>
+
+  <!-- ARTIFACT 2: NUSA-SAN -->
+  <article class="artifact reverse fade-in">
+    <div class="artifact-content">
+      <div class="artifact-number">02</div>
+      <h3 class="artifact-name">The Nusa-San</h3>
+      <div class="artifact-ainu">Sacred Community Fence · ヌササン</div>
+      <p class="artifact-text">Standing just outside every Ainu village, the nusa-san is an outdoor fence-altar where dozens — sometimes hundreds — of inaw are planted side by side, their curled shavings trembling in the wind. If a single inaw is a private letter to a god, the nusa-san is the community post office. Here, the entire village raises its collective voice to the spirit world, placing inaw for shared hunts, communal harvests, and ceremonies that no single household could perform alone. The visual effect is unforgettable: a dense, living thicket of wooden messengers, each one a shaved word that has yet to fully dissolve into the earth. The nusa-san reminds visitors that among the Ainu, prayer was never a solitary act — it was woven into the social fabric of survival itself.</p>
+    </div>
+    <div class="artifact-img">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/National_Museum_of_Ethnology%2C_Osaka_-_Altar_%28Nusasan%29_-_Nibutani%2C_Hokkaid%C3%B4.jpg/800px-National_Museum_of_Ethnology%2C_Osaka_-_Altar_%28Nusasan%29_-_Nibutani%2C_Hokkaid%C3%B4.jpg" alt="Nusa-san altar reconstruction at the National Museum of Ethnology, Osaka" loading="lazy" />
+      <div class="img-caption">Nusa-san altar · National Museum of Ethnology, Osaka · Wikimedia Commons</div>
+    </div>
+  </article>
+
+  <!-- Transition 3 -->
+  <div class="transition-quote fade-in">
+    <p>The daily prayer evolves into art…</p>
+    <span class="dot"></span>
+  </div>
+
+  <!-- ARTIFACT 3: IKUPASUY -->
+  <article class="artifact fade-in">
+    <div class="artifact-content">
+      <div class="artifact-number">03</div>
+      <h3 class="artifact-name">The Ikupasuy</h3>
+      <div class="artifact-ainu">Prayer Stick · イクパスイ</div>
+      <p class="artifact-text">The ikupasuy is what the inaw becomes when a craftsman has a lifetime to perfect his prayer. Unlike the rough, disposable inaw, this flat wooden wand is a permanent, treasured object — carved with intricate geometric spirals and passed down through generations. During ceremony, the household head dips one end into a cup of sake and flicks droplets toward the kamuy, using the ikupasuy as a bridge between the human hand and the divine. Like the inaw before it, the stick is a spoken word made physical — but here the "shaving" has been transformed into elegant, permanent carving. Most strikingly, it was passed through the rorun-puyar, the sacred eastern window reserved exclusively for gods and the sacred. No kamuy communication entered through an ordinary door.</p>
+    </div>
+    <div class="artifact-img">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Ainu_ikupasuy_%28libation_stick%29%2C_katsura_tree_II.JPG" alt="Ainu ikupasuy carved from katsura tree wood" loading="lazy" />
+      <div class="img-caption">Ikupasuy carved from katsura tree · Wikimedia Commons</div>
+    </div>
+  </article>
+
+  <!-- Transition 4 -->
+  <div class="transition-quote fade-in">
+    <p>When you wear the prayer, you become the message…</p>
+    <span class="dot"></span>
+  </div>
+
+  <!-- ARTIFACT 4: ATTUSH ROBE -->
+  <article class="artifact reverse fade-in">
+    <div class="artifact-content">
+      <div class="artifact-number">04</div>
+      <h3 class="artifact-name">The Attush Robe</h3>
+      <div class="artifact-ainu">Elm Bark Ceremonial Robe · アットゥㇱ</div>
+      <p class="artifact-text">The attush is a robe woven from the inner bark of the ohyo elm tree — a labor-intensive process that begins with stripping, soaking, and splitting the bark into long, thread-like fibers before weaving them into cloth. What makes this garment spiritually powerful, however, is what covers its surface: sweeping scroll embroideries called mon'yō, whose curling moreu and ay patterns mirror, in a striking way, the curled shavings of the inaw. The Ainu believed these spirals actively repelled evil spirits, turning the body of the wearer into a kind of living prayer stick — a walking, breathing shaved word. Every time someone put on this robe — for ceremony or for an ordinary day — they stepped into the same sacred conversation the inaw had been conducting for centuries.</p>
+    </div>
+    <div class="artifact-img">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Ainu_ceremonial_dress.jpg" alt="Ainu ceremonial attush robe in the British Museum collection" loading="lazy" />
+      <div class="img-caption">Ainu ceremonial dress · British Museum collection · Wikimedia Commons</div>
+    </div>
+  </article>
+
+  <!-- Transition 5 -->
+  <div class="transition-quote fade-in">
+    <p>The cycle closes. The gift returns to the gods…</p>
+    <span class="dot"></span>
+  </div>
+
+  <!-- ARTIFACT 5: ITANKI -->
+  <article class="artifact fade-in">
+    <div class="artifact-content">
+      <div class="artifact-number">05</div>
+      <h3 class="artifact-name">The Itanki Offering Bowl</h3>
+      <div class="artifact-ainu">Lacquered Offering Vessel · イタンキ</div>
+      <p class="artifact-text">The itanki is a lacquered or carved wooden bowl used to hold tonoto — a fermented sake offered to the kamuy as reciprocal payment for their gifts of food, health, and luck. During ceremony, an inaw is physically laid across the bowl's rim: a messenger resting beside its gift, ensuring the spirits know both who sent the offering and why. This pairing represents the full circle of Ainu spiritual life — if the inaw is the spoken prayer, the itanki and its contents are the gift that follows the words. The scene becomes most powerful during the Iyomante, the great bear ceremony, when a bear spirit is "sent home" through ritual, laden with gifts and inaw. The shaved word, in the end, was never just a message. It was the beginning of a conversation that never stopped.</p>
+    </div>
+    <div class="artifact-img">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Ainu-iomante-bear-spirit-sending-ceremony-by-Hirasawa-Byozan-1875.png" alt="Painting of the Ainu Iyomante bear spirit sending ceremony by Hirasawa Byōzan, 1875" loading="lazy" />
+      <div class="img-caption">Iyomante ceremony, Hirasawa Byōzan, 1875 · Wikimedia Commons</div>
+    </div>
+  </article>
+
+</div><!-- end thread-container -->
+
+<!-- WORKS CITED -->
+<section class="cited-section fade-in" id="cited">
+  <h2>Works Cited</h2>
+
+  <p>"Ainu Culture." <em>Wikipedia</em>, Wikimedia Foundation, 5 Jan. 2026, en.wikipedia.org/wiki/Ainu_culture. Accessed 12 May 2026.</p>
+
+  <p>"Ainu Folk Music." <em>Wikipedia</em>, Wikimedia Foundation, 13 Nov. 2025, en.wikipedia.org/wiki/Ainu_music. Accessed 12 May 2026.</p>
+
+  <p>"Ainu Language." <em>Wikipedia</em>, Wikimedia Foundation, 9 May 2026, en.wikipedia.org/wiki/Ainu_language. Accessed 12 May 2026.</p>
+
+  <p>"Ainu People." <em>Wikipedia</em>, Wikimedia Foundation, 13 May 2026, en.wikipedia.org/wiki/Ainu_people. Accessed 12 May 2026.</p>
+
+  <p>"Ainu Religion." <em>Wikipedia</em>, Wikimedia Foundation, 7 Apr. 2026, en.wikipedia.org/wiki/Ainu_religion. Accessed 12 May 2026.</p>
+
+  <p>"Colonisation of Hokkaido." <em>Wikipedia</em>, Wikimedia Foundation, 28 Apr. 2026, en.wikipedia.org/wiki/Colonisation_of_Hokkaido. Accessed 12 May 2026.</p>
+
+  <p>"Hokkaido Former Aborigines Protection Act." <em>Wikipedia</em>, Wikimedia Foundation, 26 Mar. 2026, en.wikipedia.org/wiki/Hokkaido_Former_Aborigines_Protection_Act. Accessed 12 May 2026.</p>
+
+  <p>"Inau." <em>Wikipedia</em>, Wikimedia Foundation, 3 Feb. 2026, en.wikipedia.org/wiki/Inau. Accessed 12 May 2026.</p>
+
+  <p>"Iomante." <em>Wikipedia</em>, Wikimedia Foundation, 14 Mar. 2026, en.wikipedia.org/wiki/Iomante. Accessed 12 May 2026.</p>
+
+  <p>Morris-Suzuki, Tessa. "The Ainu: Beyond the Politics of Cultural Coexistence." <em>Cultural Survival Quarterly Magazine</em>, Cultural Survival, 1999, www.culturalsurvival.org/publications/cultural-survival-quarterly/ainu-beyond-politics-cultural-coexistence. Accessed 12 May 2026.</p>
+
+  <p>"National Ainu Museum." <em>Wikipedia</em>, Wikimedia Foundation, 20 Mar. 2026, en.wikipedia.org/wiki/National_Ainu_Museum. Accessed 12 May 2026.</p>
+
+  <p>"Shigeru Kayano." <em>Wikipedia</em>, Wikimedia Foundation, 5 Apr. 2026, en.wikipedia.org/wiki/Shigeru_Kayano. Accessed 12 May 2026.</p>
+
+  <p>"Tonkori." <em>Wikipedia</em>, Wikimedia Foundation, 12 Aug. 2025, en.wikipedia.org/wiki/Tonkori. Accessed 12 May 2026.</p>
+
+  <p>"Yukar." <em>Wikipedia</em>, Wikimedia Foundation, 9 Feb. 2026, en.wikipedia.org/wiki/Yukar. Accessed 12 May 2026.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  Indigenous Cultures Research Project &bull; Spring 2026 &bull; Mrs. Little's Class
+</footer>
+
+<!-- JAVASCRIPT -->
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Intersection Observer for fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Close mobile nav on link click
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.remove('open');
+    });
+  });
+</script>
+
+</body>
+</html>
