@@ -9,233 +9,289 @@
 
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-  html,body{
-    width:100%;height:100%;overflow:hidden;
+  body{
     font-family:'Inter',sans-serif;
-    background:#111110;color:#e8e0d4;
+    background:#0e0e0d;
+    color:#e8e0d4;
+    line-height:1.7;
+    overflow-x:hidden;
   }
 
-  header{
-    position:fixed;top:0;left:0;z-index:60;width:100%;
-    padding:1.3rem 2.2rem;
-    background:linear-gradient(180deg,rgba(10,10,9,.95) 40%,transparent);
-    pointer-events:none;
+  /* ── Header ── */
+  .hero{
+    text-align:center;
+    padding:6rem 2rem 3rem;
+    position:relative;
   }
-  header h1{font:600 clamp(1.3rem,3vw,1.9rem)/1.2 'EB Garamond',serif;color:#d4a574;letter-spacing:.03em}
-  header p{font-size:.75rem;color:#6a6258;margin-top:.12rem}
-
-  .hint{
-    position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%);
-    z-index:60;pointer-events:none;
-    font-size:.65rem;color:#6a6258;text-transform:uppercase;letter-spacing:.14em;
-    display:flex;align-items:center;gap:.5rem;
-    animation:fadeH 6s ease forwards;
+  .hero::after{
+    content:'';display:block;
+    width:1px;height:60px;
+    background:linear-gradient(to bottom,transparent,#d4a57450);
+    margin:2rem auto 0;
   }
-  .hint svg{width:15px;height:15px;stroke:#6a6258;animation:bump 1.5s ease-in-out infinite}
-  @keyframes bump{0%,100%{transform:translateX(0)}50%{transform:translateX(7px)}}
-  @keyframes fadeH{0%,55%{opacity:1}100%{opacity:0}}
-
-  .prog{position:fixed;bottom:0;left:0;width:100%;height:3px;background:#1a1a18;z-index:60}
-  .prog span{display:block;height:100%;width:0;background:linear-gradient(90deg,#d4a574,#a08060);transition:width .06s linear}
-
-  #river{
-    position:absolute;top:0;left:0;width:100%;height:100%;
-    overflow-x:scroll;overflow-y:hidden;
-    white-space:nowrap;
-    cursor:grab;
-    -webkit-overflow-scrolling:touch;
+  .hero h1{
+    font:600 clamp(2rem,5vw,3rem)/1.15 'EB Garamond',serif;
+    color:#d4a574;letter-spacing:.04em;
   }
-  #river:active{cursor:grabbing}
-  #river::-webkit-scrollbar{height:0}
-
-  .rail{
-    position:fixed;top:50%;left:0;width:100%;height:1px;
-    background:#d4a57418;pointer-events:none;z-index:2;
+  .hero p{
+    font-size:.9rem;color:#8a8070;
+    max-width:420px;margin:.6rem auto 0;
   }
 
-  .sp{display:inline-block;width:10vw;height:1px;vertical-align:top}
+  /* ── Timeline ── */
+  .timeline{
+    position:relative;
+    max-width:720px;
+    margin:0 auto;
+    padding:0 2rem 8rem;
+  }
 
-  .c{
-    display:inline-block;vertical-align:top;
-    white-space:normal;
-    width:340px;margin:0 32px;
-    position:relative;z-index:10;
+  /* Central line */
+  .timeline::before{
+    content:'';
+    position:absolute;
+    left:28px;top:0;bottom:0;
+    width:2px;
+    background:linear-gradient(to bottom,#d4a57440 0%,#d4a57420 80%,transparent 100%);
+  }
+
+  /* ── Event ── */
+  .ev{
+    position:relative;
+    padding-left:68px;
+    margin-bottom:0;
+    padding-bottom:3.5rem;
     opacity:0;
-    transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1);
+    transform:translateY(28px);
+    transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1);
   }
-  .c.show{opacity:1;transform:none !important}
+  .ev.vis{opacity:1;transform:translateY(0)}
 
-  .c.up{margin-top:8vh;transform:translateY(20px)}
-  .c.dn{margin-top:calc(50vh + 32px);transform:translateY(-20px)}
+  /* Dot */
+  .ev::before{
+    content:'';
+    position:absolute;
+    left:19px;top:6px;
+    width:20px;height:20px;
+    border-radius:50%;
+    background:#0e0e0d;
+    border:2px solid #d4a574;
+    z-index:2;
+    transition:background .35s,box-shadow .35s,transform .35s;
+  }
+  .ev:hover::before{
+    background:#d4a574;
+    box-shadow:0 0 18px #d4a57460;
+    transform:scale(1.15);
+  }
 
-  .c .bx{
-    background:rgba(14,14,12,.82);
-    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-    border:1px solid rgba(212,165,116,.12);
+  /* Glow line connecting dot to card */
+  .ev::after{
+    content:'';
+    position:absolute;
+    left:38px;top:14px;
+    width:20px;height:2px;
+    background:linear-gradient(to right,#d4a57440,transparent);
+  }
+
+  /* Era dot (filled) */
+  .ev.era::before{
+    background:#d4a574;
+    box-shadow:0 0 14px #d4a57430;
+    width:22px;height:22px;
+    left:18px;
+  }
+
+  /* ── Card ── */
+  .card{
+    background:linear-gradient(145deg,rgba(26,26,24,.9),rgba(18,18,16,.95));
+    border:1px solid rgba(212,165,116,.1);
     border-radius:16px;
-    padding:1.5rem 1.4rem;
+    padding:1.6rem 1.5rem;
     transition:border-color .4s,box-shadow .4s,transform .4s cubic-bezier(.22,.61,.36,1);
   }
-  .c:hover .bx{
-    border-color:rgba(212,165,116,.3);
-    box-shadow:0 12px 40px rgba(0,0,0,.5);
-    transform:translateY(-4px);
+  .ev:hover .card{
+    border-color:rgba(212,165,116,.25);
+    box-shadow:0 8px 36px rgba(0,0,0,.4);
+    transform:translateY(-3px);
   }
 
-  .c .dt{font:600 1.3rem/1.2 'EB Garamond',serif;color:#d4a574;margin-bottom:.15rem}
-  .c .tt{font:600 1.05rem/1.3 'EB Garamond',serif;color:#f0e8dc;margin-bottom:.45rem}
-  .c .bd{font-size:.82rem;color:#c0b8ac;line-height:1.8}
-  .c .bd em{color:#d4a574;font-style:italic}
-
-  .c.loss .dt{color:#c47a6a}
-  .c.loss .bx{border-color:rgba(196,122,106,.12)}
-  .c.loss:hover .bx{border-color:rgba(196,122,106,.3)}
-
-  .c.hope .dt{color:#7ab08a}
-  .c.hope .bx{border-color:rgba(122,176,138,.12)}
-  .c.hope:hover .bx{border-color:rgba(122,176,138,.3)}
-
-  .gap{
-    display:inline-block;width:28px;height:10px;
-    vertical-align:top;margin-top:calc(50vh - 5px);
-    position:relative;z-index:10;
+  .card .date{
+    font:600 1.35rem/1.2 'EB Garamond',serif;
+    color:#d4a574;
+    margin-bottom:.15rem;
   }
-  .gap::after{
-    content:'';position:absolute;
-    top:50%;left:50%;width:5px;height:5px;
-    background:#d4a574;border-radius:50%;opacity:.3;
-    transform:translate(-50%,-50%);
+  .card .title{
+    font:600 1.1rem/1.3 'EB Garamond',serif;
+    color:#f0e8dc;
+    margin-bottom:.5rem;
+  }
+  .card .body{
+    font-size:.85rem;
+    color:#b8b0a4;
+    line-height:1.85;
+  }
+  .card .body em{color:#d4a574;font-style:italic}
+
+  /* ── Loss (red) ── */
+  .ev.loss::before{border-color:#c47a6a}
+  .ev.loss:hover::before{background:#c47a6a;box-shadow:0 0 18px #c47a6a60}
+  .ev.loss .card{border-color:rgba(196,122,106,.1)}
+  .ev.loss:hover .card{border-color:rgba(196,122,106,.25)}
+  .ev.loss .card .date{color:#c47a6a}
+
+  /* ── Hope (green) ── */
+  .ev.hope::before{border-color:#7ab08a}
+  .ev.hope:hover::before{background:#7ab08a;box-shadow:0 0 18px #7ab08a60}
+  .ev.hope .card{border-color:rgba(122,176,138,.1)}
+  .ev.hope:hover .card{border-color:rgba(122,176,138,.25)}
+  .ev.hope .card .date{color:#7ab08a}
+
+  /* ── Era divider ── */
+  .divider{
+    position:relative;
+    padding-left:68px;
+    margin-bottom:2rem;
+    padding-bottom:1rem;
+  }
+  .divider::before{
+    content:'';
+    position:absolute;
+    left:26px;top:50%;
+    width:8px;height:8px;
+    border-radius:50%;
+    background:#d4a574;
+    opacity:.3;
+    transform:translateY(-50%);
+  }
+  .divider span{
+    display:block;
+    width:45%;height:1px;
+    background:linear-gradient(to right,#d4a57425,transparent);
   }
 
-  @media(max-width:700px){
-    .c{width:280px;margin:0 20px}
+  /* ── End flourish ── */
+  .end{
+    text-align:center;
+    padding:2rem 0 4rem;
+    position:relative;
+  }
+  .end::before{
+    content:'';display:block;
+    width:1px;height:50px;
+    background:linear-gradient(to bottom,#d4a57440,transparent);
+    margin:0 auto 1.5rem;
+  }
+  .end p{
+    font:italic 1rem/1.5 'EB Garamond',serif;
+    color:#8a8070;
+    max-width:360px;
+    margin:0 auto;
+  }
+
+  /* ── Responsive ── */
+  @media(max-width:600px){
+    .timeline::before{left:18px}
+    .ev{padding-left:50px}
+    .ev::before{left:10px;width:18px;height:18px}
+    .ev.era::before{left:9px;width:20px;height:20px}
+    .ev::after{left:28px}
+    .divider{padding-left:50px}
+    .divider::before{left:16px}
+    .hero{padding:4rem 1.5rem 2rem}
+    .card{padding:1.2rem 1.1rem}
   }
 </style>
 </head>
 <body>
 
-<header>
+<div class="hero">
   <h1>History &amp; Timeline</h1>
-  <p>Scroll to journey through the history of the Ainu</p>
-</header>
-
-<div class="hint">
-  Scroll sideways or drag
-  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  <p>Ten thousand years of the Ainu — from the ice age to annexation</p>
 </div>
 
-<div class="rail"></div>
-<div class="prog"><span id="bar"></span></div>
+<div class="timeline">
 
-<div id="river">
-<span class="sp"></span>
-
-<div class="c up">
-  <div class="bx">
-    <div class="dt">~15,000 Years Ago</div>
-    <div class="tt">Jōmon Origins</div>
-    <div class="bd">The Ainu are the indigenous people of the land called Ainu Mosir, meaning the land of the Ainu, consisting of Hokkaido, the southern Sakhalin and Kuril Islands. Their culture is a descendent of the Jomon tradition, the earliest inhabitants of the Japanese islands, arriving 15000 years ago during the last ice age, when the island was still connected to Asia.</div>
+  <div class="ev era">
+    <div class="card">
+      <div class="date">~15,000 Years Ago</div>
+      <div class="title">Jōmon Origins</div>
+      <div class="body">The Ainu are the indigenous people of the land called Ainu Mosir, meaning the land of the Ainu, consisting of Hokkaido, the southern Sakhalin and Kuril Islands. Their culture is a descendent of the Jomon tradition, the earliest inhabitants of the Japanese islands, arriving 15000 years ago during the last ice age, when the island was still connected to Asia.</div>
+    </div>
   </div>
-</div>
 
-<div class="c dn">
-  <div class="bx">
-    <div class="dt">~300 BCE – 1200 CE</div>
-    <div class="tt">The Yayoi &amp; the Merge</div>
-    <div class="bd">When the Jomon communities on Honshu began to mix with the Yayai people from the Korean Peninsula, the northern Jomons communities remained isolated. Ultimately, merging with the Satsumon culture in the seventeenth to thirteenth century and the northern Okhotsk culture to form the Ainu culture.</div>
+  <div class="ev">
+    <div class="card">
+      <div class="date">~300 BCE – 1200 CE</div>
+      <div class="title">The Yayoi &amp; the Merge</div>
+      <div class="body">When the Jomon communities on Honshu began to mix with the Yayai people from the Korean Peninsula, the northern Jomons communities remained isolated. Ultimately, merging with the Satsumon culture in the seventeenth to thirteenth century and the northern Okhotsk culture to form the Ainu culture.</div>
+    </div>
   </div>
-</div>
 
-<span class="gap"></span>
+  <div class="divider"><span></span></div>
 
-<div class="c up">
-  <div class="bx">
-    <div class="dt">Pre-Contact</div>
-    <div class="tt">Life in the Forest</div>
-    <div class="bd">For thousands of years, they lived a traditional life as hunter-gatherers in the dense forests, with a lifestyle of hunting bears and deer, fishing for salmon, and gathering shellfish along the coast. Trade was also central to the Ainu, operating as the middlemen of regional trade across the Sea of Okhotsk, moving goods between the Honshu in the south to the people of Sakhalin and Kurils in north and north-east Asia.</div>
+  <div class="ev era">
+    <div class="card">
+      <div class="date">Pre-Contact</div>
+      <div class="title">Life in the Forest</div>
+      <div class="body">For thousands of years, they lived a traditional life as hunter-gatherers in the dense forests, with a lifestyle of hunting bears and deer, fishing for salmon, and gathering shellfish along the coast. Trade was also central to the Ainu, operating as the middlemen of regional trade across the Sea of Okhotsk, moving goods between the Honshu in the south to the people of Sakhalin and Kurils in north and north-east Asia.</div>
+    </div>
   </div>
-</div>
 
-<span class="gap"></span>
+  <div class="divider"><span></span></div>
 
-<div class="c dn loss">
-  <div class="bx">
-    <div class="dt">1600s</div>
-    <div class="tt">The Matsumae Clan</div>
-    <div class="bd">In the 1600s, Japanese influence was already apparent with the establishment of the Matsumae clan's trading outpost in the north of Hokkaido, where they exploited the Ainu, controlling access to rice, sake, iron, and cotton while demanding furs and fish in return.</div>
+  <div class="ev loss">
+    <div class="card">
+      <div class="date">1600s</div>
+      <div class="title">The Matsumae Clan</div>
+      <div class="body">In the 1600s, Japanese influence was already apparent with the establishment of the Matsumae clan's trading outpost in the north of Hokkaido, where they exploited the Ainu, controlling access to rice, sake, iron, and cotton while demanding furs and fish in return.</div>
+    </div>
   </div>
-</div>
 
-<div class="c up hope">
-  <div class="bx">
-    <div class="dt">1669</div>
-    <div class="tt">Shakushain's Revolt</div>
-    <div class="bd">In 1699, the chief Shakushain united Ainu communities across Hokkaido to lead a violent revolt against their trade overlords. However, this attempt was swiftly crushed with treachery, when Shakushain was killed during peace negotiations.</div>
+  <div class="ev hope">
+    <div class="card">
+      <div class="date">1669</div>
+      <div class="title">Shakushain's Revolt</div>
+      <div class="body">In 1699, the chief Shakushain united Ainu communities across Hokkaido to lead a violent revolt against their trade overlords. However, this attempt was swiftly crushed with treachery, when Shakushain was killed during peace negotiations.</div>
+    </div>
   </div>
-</div>
 
-<div class="c dn hope">
-  <div class="bx">
-    <div class="dt">1789</div>
-    <div class="tt">Kunashiri-Menashi</div>
-    <div class="bd">In 1789, a second attempt at Kunashiri-Menashi under an even more cruel regime also failed, due to internal betrayals. By the eighteenth century, the Ainu had lost control over almost all of their ancestral territory.</div>
+  <div class="ev hope">
+    <div class="card">
+      <div class="date">1789</div>
+      <div class="title">Kunashiri-Menashi</div>
+      <div class="body">In 1789, a second attempt at Kunashiri-Menashi under an even more cruel regime also failed, due to internal betrayals. By the eighteenth century, the Ainu had lost control over almost all of their ancestral territory.</div>
+    </div>
   </div>
-</div>
 
-<span class="gap"></span>
+  <div class="divider"><span></span></div>
 
-<div class="c up loss">
-  <div class="bx">
-    <div class="dt">1869</div>
-    <div class="tt">Meiji Annexation</div>
-    <div class="bd">When the Meiji government officially annexed Hokkaido in 1869, the Ainu had already fought for generations for their land (Fitzhugh and Dubreuil).</div>
+  <div class="ev era loss">
+    <div class="card">
+      <div class="date">1869</div>
+      <div class="title">Meiji Annexation</div>
+      <div class="body">When the Meiji government officially annexed Hokkaido in 1869, the Ainu had already fought for generations for their land (Fitzhugh and Dubreuil).</div>
+    </div>
   </div>
+
 </div>
 
-<span class="sp"></span>
+<div class="end">
+  <p>The land was taken. The story was not.</p>
 </div>
 
 <script>
 (function(){
-  var r=document.getElementById('river'),bar=document.getElementById('bar');
-
-  r.addEventListener('wheel',function(e){
-    e.preventDefault();
-    r.scrollLeft+=(e.deltaY!==0?e.deltaY:e.deltaX)*2;
-  },{passive:false});
-
-  var drag=false,sx=0,sl=0,vx=0,lx=0,raf=0;
-  r.addEventListener('mousedown',function(e){drag=true;sx=e.clientX;sl=r.scrollLeft;vx=0;lx=e.clientX;cancelAnimationFrame(raf)});
-  window.addEventListener('mouseup',function(){
-    if(!drag)return;drag=false;
-    (function coast(){
-      if(Math.abs(vx)<.4)return;
-      r.scrollLeft-=vx;vx*=.93;
-      raf=requestAnimationFrame(coast);
-    })();
-  });
-  r.addEventListener('mousemove',function(e){
-    if(!drag)return;e.preventDefault();
-    r.scrollLeft=sl-(e.clientX-sx);
-    vx=e.clientX-lx;lx=e.clientX;
-  });
-
-  var tsx=0,tsl=0;
-  r.addEventListener('touchstart',function(e){tsx=e.touches[0].clientX;tsl=r.scrollLeft},{passive:true});
-  r.addEventListener('touchmove',function(e){r.scrollLeft=tsl-(e.touches[0].clientX-tsx)},{passive:true});
-
-  r.addEventListener('scroll',function(){
-    var max=r.scrollWidth-r.clientWidth;
-    bar.style.width=(max>0?r.scrollLeft/max*100:0)+'%';
-  });
-
-  var els=document.querySelectorAll('.c');
+  var evs=document.querySelectorAll('.ev');
   var io=new IntersectionObserver(function(entries){
     entries.forEach(function(en){
-      if(en.isIntersecting){en.target.classList.add('show');io.unobserve(en.target)}
+      if(en.isIntersecting){
+        en.target.classList.add('vis');
+        io.unobserve(en.target);
+      }
     });
-  },{root:r,threshold:0.08,rootMargin:'0px 100px 0px 0px'});
-  els.forEach(function(el){io.observe(el)});
+  },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+  evs.forEach(function(el){io.observe(el)});
 })();
 </script>
 
