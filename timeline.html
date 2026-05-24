@@ -11,308 +11,269 @@
 
   html, body {
     height: 100%;
-    overflow: hidden;
     font-family: 'Inter', sans-serif;
     background: #111110;
     color: #e8e0d4;
+    overflow: hidden;
   }
 
-  /* ─── Full-screen horizontal scroller ─── */
-  .scene {
-    width: 100vw;
-    height: 100vh;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    cursor: grab;
-  }
-
-  .scene:active { cursor: grabbing; }
-
-  .scene::-webkit-scrollbar { height: 6px; }
-  .scene::-webkit-scrollbar-track { background: #1a1a18; }
-  .scene::-webkit-scrollbar-thumb { background: #d4a57460; border-radius: 3px; }
-  .scene::-webkit-scrollbar-thumb:hover { background: #d4a574; }
-
-  /* ─── Title pinned top-left ─── */
+  /* ─── Pinned header ─── */
   .pinned-title {
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    padding: 1.8rem 2.5rem 1rem;
-    background: linear-gradient(to bottom, #111110 60%, transparent);
-    z-index: 10;
+    top: 0; left: 0; width: 100%;
+    padding: 1.5rem 2.5rem 0.8rem;
+    background: linear-gradient(to bottom, #111110 50%, transparent);
+    z-index: 20;
     pointer-events: none;
   }
 
   .pinned-title h1 {
     font-family: 'EB Garamond', serif;
-    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
     color: #d4a574;
     letter-spacing: 0.04em;
-    font-weight: 600;
   }
 
   .pinned-title .sub {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: #a09888;
-    margin-top: 0.25rem;
+    margin-top: 0.15rem;
   }
 
-  /* ─── Scroll hint pinned bottom ─── */
+  /* ─── Scroll hint ─── */
   .scroll-hint {
     position: fixed;
-    bottom: 1.2rem;
+    bottom: 1.5rem;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: #a09888;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    z-index: 10;
+    z-index: 20;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    animation: hintFade 3s ease-in-out forwards;
+    gap: 0.5rem;
+    animation: hintFade 4s ease forwards;
     pointer-events: none;
   }
 
   .scroll-hint svg {
-    width: 18px;
-    height: 18px;
+    width: 16px; height: 16px;
     stroke: #a09888;
     animation: nudge 1.5s ease-in-out infinite;
   }
 
-  @keyframes nudge {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(6px); }
+  @keyframes nudge { 0%,100%{transform:translateX(0)} 50%{transform:translateX(6px)} }
+  @keyframes hintFade { 0%,60%{opacity:1} 100%{opacity:0} }
+
+  /* ─── The scrolling container ─── */
+  .scroll-container {
+    width: 100vw;
+    height: 100vh;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    cursor: grab;
+    -webkit-overflow-scrolling: touch;
   }
 
-  @keyframes hintFade {
-    0%, 70% { opacity: 1; }
-    100% { opacity: 0; }
-  }
+  .scroll-container:active { cursor: grabbing; }
 
-  /* ─── Track (the horizontal rail) ─── */
-  .track {
+  .scroll-container::-webkit-scrollbar { height: 5px; }
+  .scroll-container::-webkit-scrollbar-track { background: #1a1a18; }
+  .scroll-container::-webkit-scrollbar-thumb { background: #d4a57450; border-radius: 3px; }
+
+  /* ─── The wide horizontal strip ─── */
+  .strip {
     display: flex;
     align-items: center;
-    padding: 0 8vw;
-    min-width: max-content;
     height: 100vh;
+    padding: 0 6vw;
+    width: max-content;
     position: relative;
   }
 
-  /* Horizontal line through middle */
-  .rail {
+  /* Horizontal rail line at 50% */
+  .strip::before {
+    content: '';
     position: absolute;
     top: 50%;
-    left: 4vw;
-    right: 4vw;
+    left: 3vw; right: 3vw;
     height: 2px;
-    background: linear-gradient(to right, transparent, #d4a57435 3%, #d4a57435 97%, transparent);
-    transform: translateY(-50%);
+    background: linear-gradient(to right, transparent, #d4a57430 4%, #d4a57430 96%, transparent);
+    pointer-events: none;
   }
 
-  /* ─── Era separator ─── */
-  .era-sep {
-    width: 60px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .era-sep::after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: #d4a574;
-    border-radius: 50%;
-    opacity: 0.5;
-  }
-
-  /* ─── Event Card ─── */
+  /* ─── Card ─── */
   .card {
-    flex-shrink: 0;
-    width: 320px;
-    margin: 0 24px;
+    flex: 0 0 300px;
+    width: 300px;
+    margin: 0 20px;
     position: relative;
     opacity: 0;
-    transform: translateY(20px);
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
 
-  .card.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .card.visible { opacity: 1; transform: translateY(0) !important; }
 
-  /* Alternate cards above/below the rail */
+  /* Above the rail */
   .card.above {
     align-self: flex-start;
-    padding-top: 10vh;
-    padding-bottom: 0;
+    margin-top: 6vh;
+    margin-bottom: auto;
+    transform: translateY(15px);
   }
 
+  /* Below the rail */
   .card.below {
     align-self: flex-end;
-    padding-bottom: 10vh;
-    padding-top: 0;
+    margin-bottom: 6vh;
+    margin-top: auto;
+    transform: translateY(-15px);
   }
 
-  /* Connector line from card to rail */
-  .card::before {
-    content: '';
+  /* Vertical connector line */
+  .card .connector {
     position: absolute;
     left: 50%;
     width: 2px;
-    background: #d4a57430;
+    background: #d4a57425;
     transform: translateX(-50%);
+    pointer-events: none;
   }
 
-  .card.above::before {
-    bottom: -2vh;
-    height: calc(50vh - 10vh - 100% + 2vh);
-    min-height: 40px;
+  .card.above .connector {
+    top: 100%;
+    height: calc(50vh - 100% - 6vh);
+    min-height: 30px;
   }
 
-  .card.below::before {
-    top: -2vh;
-    height: calc(50vh - 10vh - 100% + 2vh);
-    min-height: 40px;
+  .card.below .connector {
+    bottom: 100%;
+    height: calc(50vh - 100% - 6vh);
+    min-height: 30px;
   }
 
   /* Dot on the rail */
-  .card::after {
-    content: '';
+  .dot {
     position: absolute;
     left: 50%;
+    top: 50vh;
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #1a1a18;
+    background: #111110;
     border: 2px solid #d4a574;
     transform: translate(-50%, -50%);
-    z-index: 3;
+    z-index: 5;
     transition: background 0.3s, box-shadow 0.3s;
+    pointer-events: none;
   }
 
-  .card.above::after { bottom: calc(-2vh - 7px + (50vh - 10vh - 100%)); top: auto; }
-  /* Simplify: put dot at the midpoint of viewport */
-  .card::after {
-    position: absolute;
-    left: 50%;
-  }
-
-  .card.above::after {
-    bottom: auto;
-    top: calc(100% + ((50vh - 10vh - 100%) / 2));
-  }
-
-  .card.below::after {
-    top: auto;
-    bottom: calc(100% + ((50vh - 10vh - 100%) / 2));
-  }
-
-  .card:hover::after {
+  .card:hover .dot {
     background: #d4a574;
     box-shadow: 0 0 14px #d4a57480;
   }
 
-  /* ─── Card Inner ─── */
+  .card.era .dot {
+    width: 20px; height: 20px;
+    background: #d4a574;
+    box-shadow: 0 0 16px #d4a57440;
+  }
+
+  /* ─── Card inner ─── */
   .card-inner {
-    background: #1e1e1c;
+    background: #1c1c1a;
     border: 1px solid #2a2a26;
-    border-radius: 12px;
-    padding: 1.6rem 1.5rem;
-    position: relative;
+    border-radius: 10px;
+    padding: 1.4rem 1.3rem;
     transition: border-color 0.3s, box-shadow 0.3s;
   }
 
   .card:hover .card-inner {
     border-color: #d4a57440;
-    box-shadow: 0 4px 30px #00000060;
+    box-shadow: 0 4px 24px #00000050;
   }
 
   .card-date {
     font-family: 'EB Garamond', serif;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 600;
     color: #d4a574;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
   }
 
   .card-title {
     font-family: 'EB Garamond', serif;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: #f0e8dc;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
     line-height: 1.3;
   }
 
   .card-body {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: #b0a898;
-    line-height: 1.75;
+    line-height: 1.7;
   }
 
   .card-body em { color: #d4a574; font-style: italic; }
 
-  /* ─── Color coding ─── */
+  /* ─── Loss (red) ─── */
   .card.loss .card-date { color: #c47a6a; }
-  .card.loss::after { border-color: #c47a6a; }
-  .card.loss:hover::after { background: #c47a6a; box-shadow: 0 0 14px #c47a6a80; }
-  .card.loss .card-inner { border-color: #c47a6a20; }
+  .card.loss .dot { border-color: #c47a6a; }
+  .card.loss:hover .dot { background: #c47a6a; box-shadow: 0 0 14px #c47a6a80; }
+  .card.loss.era .dot { background: #c47a6a; box-shadow: 0 0 16px #c47a6a40; }
+  .card.loss .connector { background: #c47a6a25; }
   .card.loss:hover .card-inner { border-color: #c47a6a40; }
 
+  /* ─── Hope (green) ─── */
   .card.hope .card-date { color: #7ab08a; }
-  .card.hope::after { border-color: #7ab08a; }
-  .card.hope:hover::after { background: #7ab08a; box-shadow: 0 0 14px #7ab08a80; }
-  .card.hope .card-inner { border-color: #7ab08a20; }
+  .card.hope .dot { border-color: #7ab08a; }
+  .card.hope:hover .dot { background: #7ab08a; box-shadow: 0 0 14px #7ab08a80; }
+  .card.hope.era .dot { background: #7ab08a; box-shadow: 0 0 16px #7ab08a40; }
+  .card.hope .connector { background: #7ab08a25; }
   .card.hope:hover .card-inner { border-color: #7ab08a40; }
 
-  /* Era card (bigger dot) */
-  .card.era::after {
-    width: 20px;
-    height: 20px;
-    background: #d4a574;
-    box-shadow: 0 0 18px #d4a57440;
+  /* ─── Era separator ─── */
+  .era-sep {
+    flex: 0 0 40px;
+    height: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .card.era.loss::after { background: #c47a6a; box-shadow: 0 0 18px #c47a6a40; }
-  .card.era.hope::after { background: #7ab08a; box-shadow: 0 0 18px #7ab08a40; }
+  .era-sep::after {
+    content: '';
+    width: 6px; height: 6px;
+    background: #d4a574;
+    border-radius: 50%;
+    opacity: 0.4;
+  }
 
-  /* ─── Progress bar at bottom ─── */
+  /* ─── Progress bar ─── */
   .progress-track {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    height: 3px;
-    background: #2a2a26;
-    z-index: 10;
+    bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: #222;
+    z-index: 20;
   }
 
-  .progress-bar {
+  .progress-fill {
     height: 100%;
     width: 0%;
     background: linear-gradient(to right, #d4a574, #c47a6a, #7ab08a);
-    transition: width 0.1s linear;
+    transition: width 0.05s linear;
   }
 
-  /* ─── Responsive ─── */
-  @media (max-width: 700px) {
-    .card { width: 260px; margin: 0 16px; }
-    .card-inner { padding: 1.2rem 1.1rem; }
-    .card-body { font-size: 0.78rem; }
-    .pinned-title { padding: 1.2rem 1.5rem 0.8rem; }
+  /* ─── Mobile ─── */
+  @media (max-width: 600px) {
+    .card { flex: 0 0 250px; width: 250px; margin: 0 14px; }
+    .card-inner { padding: 1.1rem 1rem; }
+    .card-body { font-size: 0.76rem; }
   }
 </style>
 </head>
@@ -324,38 +285,43 @@
 </div>
 
 <div class="scroll-hint">
-  Scroll or drag
+  Scroll or drag sideways
   <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
     <path d="M5 12h14M13 5l7 7-7 7"/>
   </svg>
 </div>
 
-<div class="scene" id="scene">
-  <div class="rail"></div>
-  <div class="track" id="track">
+<div class="scroll-container" id="sc">
+  <div class="strip">
 
     <div class="card above era">
       <div class="card-inner">
         <div class="card-date">~13,000 BCE</div>
         <div class="card-title">Jōmon Origins</div>
-        <div class="card-body">The Jōmon people — ancestors of the Ainu — inhabit the Japanese archipelago as hunter-gatherers, producing some of the world's earliest pottery. On the northern island of Hokkaido, communities remain isolated from the cultural mixing occurring farther south.</div>
+        <div class="card-body">The Jōmon people — ancestors of the Ainu — inhabit the Japanese archipelago as hunter-gatherers, producing some of the world's earliest pottery. On Hokkaido, communities remain isolated from the mixing occurring farther south.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="card below">
       <div class="card-inner">
         <div class="card-date">~300 BCE – 700 CE</div>
         <div class="card-title">The Yayoi Migration</div>
-        <div class="card-body">Jōmon communities on Honshu mixed with the Yayoi people from the Korean Peninsula. The northern Jōmon remained isolated — no rice paddies, no bronze. Fishing, foraging, hunting. The old ways held.</div>
+        <div class="card-body">Jōmon communities on Honshu mixed with the Yayoi from the Korean Peninsula. The north held to older ways — no rice paddies, no bronze. Fishing, foraging, hunting.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="card above">
       <div class="card-inner">
         <div class="card-date">7th – 13th Century</div>
         <div class="card-title">Satsumon &amp; Okhotsk Merge</div>
-        <div class="card-body">The Satsumon culture (descended from northern Jōmon) fused with the Okhotsk culture arriving from Sakhalin. From this merger, the Ainu emerged as a distinct people — their own language, spiritual practices, and material culture rooted in the forests and rivers of Hokkaido.</div>
+        <div class="card-body">The Satsumon culture fused with the Okhotsk culture from Sakhalin. From this merger, the Ainu emerged — their own language, spiritual practices, and material culture rooted in the forests of Hokkaido.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="era-sep"></div>
@@ -364,8 +330,10 @@
       <div class="card-inner">
         <div class="card-date">Pre-Contact</div>
         <div class="card-title">Life in the Forest</div>
-        <div class="card-body">For thousands of years, the Ainu lived as hunter-gatherers — hunting bears and deer, fishing for salmon, gathering shellfish. They operated as middlemen traders across the Sea of Okhotsk, moving goods between Honshu, Sakhalin, and the Kurils.</div>
+        <div class="card-body">For thousands of years, the Ainu lived as hunter-gatherers — hunting bears and deer, fishing for salmon. They operated as middlemen traders across the Sea of Okhotsk, moving goods between Honshu, Sakhalin, and the Kurils.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="era-sep"></div>
@@ -374,24 +342,30 @@
       <div class="card-inner">
         <div class="card-date">1600s</div>
         <div class="card-title">The Matsumae Clan</div>
-        <div class="card-body">Japanese influence tightened with the Matsumae clan's trading outpost in southern Hokkaido. The clan controlled rice, sake, iron, and cotton — demanding furs and fish in return through coercive, unequal trade.</div>
+        <div class="card-body">Japanese influence tightened with the Matsumae clan's trading outpost in southern Hokkaido — controlling rice, sake, iron, cotton — demanding furs and fish through coercive, unequal trade.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="card below hope">
       <div class="card-inner">
         <div class="card-date">1669</div>
         <div class="card-title">Shakushain's Revolt</div>
-        <div class="card-body">Chief <em>Shakushain</em> united Ainu communities across Hokkaido in armed revolt against their trade overlords. The uprising was crushed through treachery — Shakushain was killed during what were supposed to be peace negotiations.</div>
+        <div class="card-body">Chief <em>Shakushain</em> united Ainu communities in armed revolt. The uprising was crushed through treachery — Shakushain killed during what were supposed to be peace negotiations.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="card above hope">
       <div class="card-inner">
         <div class="card-date">1789</div>
         <div class="card-title">Kunashiri-Menashi Revolt</div>
-        <div class="card-body">A second major rebellion erupted under an even crueler regime. It failed due to internal betrayals. By the end of the 18th century, the Ainu had lost control over almost all of their ancestral territory.</div>
+        <div class="card-body">A second major rebellion under an even crueler regime. It failed due to internal betrayals. By the end of the 18th century, the Ainu had lost almost all ancestral territory.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="era-sep"></div>
@@ -400,24 +374,30 @@
       <div class="card-inner">
         <div class="card-date">1869</div>
         <div class="card-title">Meiji Annexation</div>
-        <div class="card-body">The Meiji government officially annexed Hokkaido, renaming it from <em>Ezo</em> — the Ainu homeland. A systematic colonization campaign began. Land was seized and redistributed to Japanese settlers. Ainu had fought for generations; now it was taken by decree.</div>
+        <div class="card-body">The Meiji government annexed Hokkaido, renaming it from <em>Ezo</em>. A systematic colonization campaign began. Ainu land was seized and redistributed to Japanese settlers.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="card above loss">
       <div class="card-inner">
         <div class="card-date">1899</div>
         <div class="card-title">Former Aborigines Protection Act</div>
-        <div class="card-body">Japan forced assimilation. Ainu children were sent to Japanese-language schools where speaking Ainu meant punishment. Traditional practices were banned. The law's very title — "Former Aborigines" — declared the Ainu already gone.</div>
+        <div class="card-body">Forced assimilation. Children sent to Japanese schools — speaking Ainu meant punishment. Traditional practices banned. The law's title declared the Ainu already gone.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="card below loss">
       <div class="card-inner">
         <div class="card-date">1955</div>
         <div class="card-title">Iyomante Banned</div>
-        <div class="card-body">The sacred bear-sending ceremony <em>Iyomante</em> — one of the most important Ainu spiritual practices — was banned by authorities. Artifacts were confiscated, some destroyed, others shipped to foreign museums and labeled <em>primitive</em>.</div>
+        <div class="card-body">The sacred bear-sending ceremony <em>Iyomante</em> was banned. Artifacts confiscated, some destroyed, others shipped to foreign museums labeled <em>primitive</em> and stripped of their names.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="era-sep"></div>
@@ -426,81 +406,79 @@
       <div class="card-inner">
         <div class="card-date">2008</div>
         <div class="card-title">Diet Resolution</div>
-        <div class="card-body">The Japanese Diet passed a non-binding resolution recognizing the Ainu as an Indigenous people — a symbolic but significant step after over a century of denial.</div>
+        <div class="card-body">The Japanese Diet passed a non-binding resolution recognizing the Ainu as Indigenous — symbolic but significant after a century of denial.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="card below era hope">
       <div class="card-inner">
         <div class="card-date">2019</div>
         <div class="card-title">Ainu Promotion Act</div>
-        <div class="card-body">Japan passed legislation legally recognizing the Ainu as Indigenous — 150 years after annexation. The law acknowledged historical discrimination, though critics noted it lacked land rights or self-determination provisions.</div>
+        <div class="card-body">Japan legally recognized the Ainu as Indigenous — 150 years late. The law acknowledged discrimination, though critics noted it lacked land rights or self-determination.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="card above hope">
       <div class="card-inner">
         <div class="card-date">2020</div>
         <div class="card-title">Upopoy Museum Opens</div>
-        <div class="card-body">The <em>Upopoy</em> National Ainu Museum opened in Shiraoi, Hokkaido — the first national institution dedicated to Ainu history. The spiral is still being stitched. Still being shaved. Still coiling upward from new hands.</div>
+        <div class="card-body">The <em>Upopoy</em> National Ainu Museum opened in Shiraoi — the first national institution for Ainu history. The spiral is still being stitched. Still coiling upward from new hands.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
     <div class="card below hope">
       <div class="card-inner">
         <div class="card-date">Today</div>
         <div class="card-title">The Spiral Endures</div>
-        <div class="card-body">Fewer than ten native speakers remain. The hunting grounds are gone. But Ainu communities continue to revitalize their language, practices, and arts. The <em>moreu</em> was never lost. It was just waiting.</div>
+        <div class="card-body">Fewer than ten native speakers remain. But the <em>moreu</em> — the sacred spiral — was never lost. It was just waiting.</div>
       </div>
+      <div class="connector"></div>
+      <div class="dot"></div>
     </div>
 
   </div>
 </div>
 
-<div class="progress-track"><div class="progress-bar" id="progress"></div></div>
+<div class="progress-track"><div class="progress-fill" id="pf"></div></div>
 
 <script>
-  const scene = document.getElementById('scene');
-  const progress = document.getElementById('progress');
+  const sc = document.getElementById('sc');
+  const pf = document.getElementById('pf');
 
-  // ─── Drag to scroll ───
-  let isDown = false, startX, scrollLeft;
-
-  scene.addEventListener('mousedown', e => {
-    isDown = true;
-    startX = e.pageX - scene.offsetLeft;
-    scrollLeft = scene.scrollLeft;
-  });
-  scene.addEventListener('mouseleave', () => isDown = false);
-  scene.addEventListener('mouseup', () => isDown = false);
-  scene.addEventListener('mousemove', e => {
-    if (!isDown) return;
+  // Wheel → horizontal
+  sc.addEventListener('wheel', e => {
     e.preventDefault();
-    const x = e.pageX - scene.offsetLeft;
-    scene.scrollLeft = scrollLeft - (x - startX) * 1.5;
-  });
-
-  // ─── Wheel → horizontal scroll ───
-  scene.addEventListener('wheel', e => {
-    e.preventDefault();
-    scene.scrollLeft += e.deltaY * 2;
+    sc.scrollLeft += (e.deltaY || e.deltaX) * 2.5;
   }, { passive: false });
 
-  // ─── Progress bar ───
-  scene.addEventListener('scroll', () => {
-    const pct = scene.scrollLeft / (scene.scrollWidth - scene.clientWidth) * 100;
-    progress.style.width = pct + '%';
+  // Drag to scroll
+  let dragging = false, sx, sl;
+  sc.addEventListener('mousedown', e => { dragging = true; sx = e.pageX; sl = sc.scrollLeft; });
+  window.addEventListener('mouseup', () => dragging = false);
+  sc.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    e.preventDefault();
+    sc.scrollLeft = sl - (e.pageX - sx) * 1.8;
   });
 
-  // ─── Fade-in on scroll into view ───
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        obs.unobserve(entry.target);
-      }
+  // Progress
+  sc.addEventListener('scroll', () => {
+    const max = sc.scrollWidth - sc.clientWidth;
+    pf.style.width = (max > 0 ? (sc.scrollLeft / max) * 100 : 0) + '%';
+  });
+
+  // Fade-in
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
     });
-  }, { root: scene, threshold: 0.2 });
+  }, { root: sc, threshold: 0.15 });
 
   document.querySelectorAll('.card').forEach(el => obs.observe(el));
 </script>
