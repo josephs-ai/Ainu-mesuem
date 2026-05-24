@@ -12,37 +12,35 @@
   html,body{
     width:100%;height:100%;overflow:hidden;
     font-family:'Inter',sans-serif;
-    background:#111110;color:#e8e0d4;
+    background:#0a0a09;color:#e8e0d4;
   }
 
-  /* ── Fixed header ── */
+  /* ── Fixed UI ── */
   header{
-    position:fixed;top:0;left:0;z-index:50;width:100%;
-    padding:1.4rem 2.2rem;
-    background:linear-gradient(180deg,#111110 50%,transparent);
+    position:fixed;top:0;left:0;z-index:60;width:100%;
+    padding:1.3rem 2.2rem;
+    background:linear-gradient(180deg,rgba(10,10,9,.95) 40%,transparent);
     pointer-events:none;
   }
-  header h1{font:600 clamp(1.3rem,3vw,2rem)/1.2 'EB Garamond',serif;color:#d4a574;letter-spacing:.03em}
-  header p{font-size:.78rem;color:#7a7268;margin-top:.15rem}
+  header h1{font:600 clamp(1.3rem,3vw,1.9rem)/1.2 'EB Garamond',serif;color:#d4a574;letter-spacing:.03em}
+  header p{font-size:.75rem;color:#6a6258;margin-top:.12rem}
 
-  /* ── Scroll hint ── */
   .hint{
-    position:fixed;bottom:1.6rem;left:50%;transform:translateX(-50%);
-    z-index:50;pointer-events:none;
-    font-size:.68rem;color:#7a7268;text-transform:uppercase;letter-spacing:.14em;
+    position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%);
+    z-index:60;pointer-events:none;
+    font-size:.65rem;color:#6a6258;text-transform:uppercase;letter-spacing:.14em;
     display:flex;align-items:center;gap:.5rem;
-    animation:fadeH 5s ease forwards;
+    animation:fadeH 6s ease forwards;
   }
-  .hint svg{width:16px;height:16px;stroke:#7a7268;animation:bump 1.4s ease-in-out infinite}
+  .hint svg{width:15px;height:15px;stroke:#6a6258;animation:bump 1.5s ease-in-out infinite}
   @keyframes bump{0%,100%{transform:translateX(0)}50%{transform:translateX(7px)}}
-  @keyframes fadeH{0%,60%{opacity:1}100%{opacity:0}}
+  @keyframes fadeH{0%,55%{opacity:1}100%{opacity:0}}
 
-  /* ── Progress bar ── */
-  .prog{position:fixed;bottom:0;left:0;width:100%;height:3px;background:#1a1a18;z-index:50}
-  .prog span{display:block;height:100%;width:0;background:linear-gradient(90deg,#d4a574,#a08060);transition:width .08s linear}
+  .prog{position:fixed;bottom:0;left:0;width:100%;height:3px;background:#1a1a18;z-index:60}
+  .prog span{display:block;height:100%;width:0;background:linear-gradient(90deg,#d4a574,#a08060);transition:width .06s linear}
 
   /* ══════════════════════════════
-     RIVER — the horizontal scroller
+     RIVER — horizontal scroller
      ══════════════════════════════ */
   #river{
     position:absolute;top:0;left:0;width:100%;height:100%;
@@ -50,115 +48,105 @@
     white-space:nowrap;
     cursor:grab;
     -webkit-overflow-scrolling:touch;
-    scroll-behavior:auto;
   }
   #river:active{cursor:grabbing}
   #river::-webkit-scrollbar{height:0}
 
   /* ── Rail ── */
   .rail{
-    position:fixed;top:50%;left:0;width:100%;height:2px;
-    background:#d4a57418;pointer-events:none;z-index:1;
+    position:fixed;top:50%;left:0;width:100%;height:1px;
+    background:#d4a57415;pointer-events:none;z-index:2;
   }
 
-  /* ── Spacers ── */
-  .sp{display:inline-block;width:10vw;height:1px;vertical-align:top}
+  .sp{display:inline-block;width:8vw;height:1px;vertical-align:top}
 
   /* ══════════════════════════════
-     CARDS
+     BACKGROUND IMAGE PANELS
+     — tall strips that scroll with content
+     ══════════════════════════════ */
+  .bg{
+    display:inline-block;
+    vertical-align:top;
+    width:100vw;
+    height:100vh;
+    position:relative;
+    overflow:hidden;
+  }
+  .bg img{
+    position:absolute;top:0;left:0;
+    width:110%;height:100%;
+    object-fit:cover;
+    filter:brightness(.22) saturate(.6);
+    transform:translateX(0);
+    transition:none;
+    pointer-events:none;
+  }
+  /* Gradient fades on edges */
+  .bg::before,.bg::after{
+    content:'';position:absolute;top:0;height:100%;width:18vw;z-index:1;pointer-events:none;
+  }
+  .bg::before{left:0;background:linear-gradient(90deg,#0a0a09,transparent)}
+  .bg::after{right:0;background:linear-gradient(270deg,#0a0a09,transparent)}
+
+  /* ══════════════════════════════
+     CARDS — sit on top of backgrounds
      ══════════════════════════════ */
   .c{
     display:inline-block;vertical-align:top;
     white-space:normal;
-    width:300px;margin:0 28px;
-    position:relative;
+    width:340px;margin:0 32px;
+    position:relative;z-index:10;
     opacity:0;
-    transition:opacity .7s cubic-bezier(.25,.46,.45,.94),transform .7s cubic-bezier(.25,.46,.45,.94);
+    transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1);
   }
   .c.show{opacity:1;transform:none !important}
 
-  .c.up{margin-top:7vh;transform:translateY(18px)}
-  .c.dn{margin-top:calc(50vh + 30px);transform:translateY(-18px)}
+  .c.up{margin-top:8vh;transform:translateY(20px)}
+  .c.dn{margin-top:calc(50vh + 32px);transform:translateY(-20px)}
 
-  /* ── Card box ── */
   .c .bx{
-    background:linear-gradient(135deg,#1e1e1c,#1a1a18);
-    border:1px solid #2a2826;
-    border-radius:14px;
-    padding:1.4rem 1.3rem;
-    transition:border-color .35s,box-shadow .35s,transform .35s;
+    background:rgba(14,14,12,.82);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(212,165,116,.12);
+    border-radius:16px;
+    padding:1.5rem 1.4rem;
+    transition:border-color .4s,box-shadow .4s,transform .4s cubic-bezier(.22,.61,.36,1);
   }
   .c:hover .bx{
-    border-color:#d4a57440;
-    box-shadow:0 8px 32px #00000050;
-    transform:translateY(-3px);
+    border-color:rgba(212,165,116,.3);
+    box-shadow:0 12px 40px rgba(0,0,0,.5);
+    transform:translateY(-4px);
   }
 
-  .c .dt{font:600 1.25rem/1.2 'EB Garamond',serif;color:#d4a574;margin-bottom:.15rem}
-  .c .tt{font:600 1rem/1.3 'EB Garamond',serif;color:#f0e8dc;margin-bottom:.4rem}
-  .c .bd{font-size:.8rem;color:#b0a898;line-height:1.75}
+  .c .dt{font:600 1.3rem/1.2 'EB Garamond',serif;color:#d4a574;margin-bottom:.15rem}
+  .c .tt{font:600 1.05rem/1.3 'EB Garamond',serif;color:#f0e8dc;margin-bottom:.45rem}
+  .c .bd{font-size:.82rem;color:#c0b8ac;line-height:1.8}
   .c .bd em{color:#d4a574;font-style:italic}
 
-  /* ── Loss ── */
   .c.loss .dt{color:#c47a6a}
-  .c.loss .bx{border-color:#c47a6a18}
-  .c.loss:hover .bx{border-color:#c47a6a40}
+  .c.loss .bx{border-color:rgba(196,122,106,.12)}
+  .c.loss:hover .bx{border-color:rgba(196,122,106,.3)}
 
-  /* ── Hope ── */
   .c.hope .dt{color:#7ab08a}
-  .c.hope .bx{border-color:#7ab08a18}
-  .c.hope:hover .bx{border-color:#7ab08a40}
+  .c.hope .bx{border-color:rgba(122,176,138,.12)}
+  .c.hope:hover .bx{border-color:rgba(122,176,138,.3)}
 
-  /* ══════════════════════════════
-     IMAGE PANELS — scroll alongside
-     ══════════════════════════════ */
-  .img-panel{
-    display:inline-block;vertical-align:top;
-    white-space:normal;
-    width:220px;margin:0 16px;
-    position:relative;
-    opacity:0;
-    transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94);
-  }
-  .img-panel.show{opacity:1;transform:none !important}
-
-  .img-panel.up{margin-top:12vh;transform:translateY(20px)}
-  .img-panel.dn{margin-top:calc(50vh + 36px);transform:translateY(-20px)}
-
-  .img-panel img{
-    width:100%;border-radius:12px;
-    display:block;
-    filter:brightness(.85) saturate(.9);
-    transition:filter .4s,transform .4s;
-    box-shadow:0 4px 20px #00000040;
-  }
-  .img-panel:hover img{
-    filter:brightness(.95) saturate(1);
-    transform:scale(1.02);
-  }
-  .img-panel .cap{
-    display:block;margin-top:.5rem;
-    font-size:.65rem;color:#7a7268;
-    font-style:italic;text-align:center;
-    line-height:1.4;
-  }
-
-  /* ── Gap marker ── */
+  /* ── Gap dot ── */
   .gap{
-    display:inline-block;width:36px;height:10px;
+    display:inline-block;width:28px;height:10px;
     vertical-align:top;margin-top:calc(50vh - 5px);
-    position:relative;
+    position:relative;z-index:10;
   }
   .gap::after{
     content:'';position:absolute;
     top:50%;left:50%;width:5px;height:5px;
-    background:#d4a574;border-radius:50%;opacity:.35;
+    background:#d4a574;border-radius:50%;opacity:.3;
     transform:translate(-50%,-50%);
   }
 
-  @media(max-width:600px){
-    .c{width:250px;margin:0 18px}
-    .img-panel{width:170px;margin:0 12px}
+  @media(max-width:700px){
+    .c{width:280px;margin:0 20px}
+    .bg{width:120vw}
   }
 </style>
 </head>
@@ -166,7 +154,7 @@
 
 <header>
   <h1>History &amp; Timeline</h1>
-  <p>The Ainu — from origin to the forest</p>
+  <p>Scroll to journey through ten thousand years of the Ainu</p>
 </header>
 
 <div class="hint">
@@ -180,158 +168,130 @@
 <div id="river">
 <span class="sp"></span>
 
-<!-- ═══ JOMON ═══ -->
+<!-- ═══════════════════════════════════
+     SECTION 1: ORIGINS
+     BG: Ancient forest
+     ═══════════════════════════════════ -->
+<div class="bg" data-speed="0.3">
+  <img src="images/bg_ancient_trees.jpg" alt="">
+</div>
+
 <div class="c up">
   <div class="bx">
-    <div class="dt">~13,000 BCE</div>
+    <div class="dt">~15,000 Years Ago</div>
     <div class="tt">Jōmon Origins</div>
-    <div class="bd">The Ainu are the Indigenous people of Hokkaido, the large northern island of Japan. Their ancestors — the Jōmon — inhabited the archipelago as hunter-gatherers for thousands of years, producing some of the world's earliest pottery. On Hokkaido, communities remained isolated from the cultural mixing occurring farther south on Honshu.</div>
+    <div class="bd">The Ainu are the indigenous people of the land called Ainu Mosir, meaning the land of the Ainu, consisting of Hokkaido, the southern Sakhalin and Kuril Islands. Their culture is a descendent of the Jomon tradition, the earliest inhabitants of the Japanese islands, arriving 15000 years ago during the last ice age, when the island was still connected to Asia.</div>
   </div>
 </div>
 
-<div class="img-panel dn">
-  <img src="images/jstor_prayer_stick_12621430.jpg" alt="Inaw prayer stick">
-  <span class="cap">Inaw prayer stick · Peabody Museum</span>
-</div>
-
-<!-- ═══ YAYOI ═══ -->
 <div class="c dn">
   <div class="bx">
-    <div class="dt">~300 BCE – 700 CE</div>
-    <div class="tt">The Yayoi Migration</div>
-    <div class="bd">When Jōmon communities on Honshu began to mix with the Yayoi people from the Korean Peninsula, the northern Jōmon communities remained isolated. Wet-rice agriculture and bronze tools transformed the south, but the north held to older ways — fishing, foraging, hunting.</div>
+    <div class="dt">~300 BCE – 1200 CE</div>
+    <div class="tt">The Yayoi &amp; the Merge</div>
+    <div class="bd">When the Jomon communities on Honshu began to mix with the Yayai people from the Korean Peninsula, the northern Jomons communities remained isolated. Ultimately, merging with the Satsumon culture in the seventeenth to thirteenth century and the northern Okhotsk culture to form the Ainu culture.</div>
   </div>
-</div>
-
-<!-- ═══ SATSUMON ═══ -->
-<div class="c up">
-  <div class="bx">
-    <div class="dt">7th – 13th Century</div>
-    <div class="tt">Satsumon &amp; Okhotsk Merge</div>
-    <div class="bd">The Satsumon culture, descended from northern Jōmon, merged with the Okhotsk culture arriving from Sakhalin and the Sea of Okhotsk coast. From this fusion, the Ainu emerged as a distinct people — with their own language, spiritual practices, and material culture rooted in the forests and rivers of Hokkaido.</div>
-  </div>
-</div>
-
-<div class="img-panel dn">
-  <img src="images/jstor_attush_14735048.jpg" alt="Attush robe">
-  <span class="cap">Attush bark-cloth robe · Seattle Art Museum</span>
 </div>
 
 <span class="gap"></span>
 
-<!-- ═══ TRADITIONAL LIFE ═══ -->
-<div class="c dn">
+<!-- ═══════════════════════════════════
+     SECTION 2: LIFE IN THE FOREST
+     BG: Misty forest
+     ═══════════════════════════════════ -->
+<div class="bg" data-speed="0.25">
+  <img src="images/bg_forest.jpg" alt="">
+</div>
+
+<div class="c up">
   <div class="bx">
-    <div class="dt">Pre-Contact Era</div>
+    <div class="dt">Pre-Contact</div>
     <div class="tt">Life in the Forest</div>
-    <div class="bd">For thousands of years, they lived in deep forest — hunting bear and deer, fishing rivers choked with salmon, reading the land the way others read books. They didn't divide the world into sacred and ordinary. To them, everything alive carried a spirit, a <em>kamuy</em>: the fire, the water, the bear, the owl, the mountain. The forest wasn't scenery. It was congregation. Every tree a god standing still.</div>
-  </div>
-</div>
-
-<div class="img-panel up">
-  <img src="images/jstor_libation_wand_9861141.jpg" alt="Ikupasuy prayer wand">
-  <span class="cap">Ikupasuy prayer wand · AMNH</span>
-</div>
-
-<!-- ═══ TRADE ═══ -->
-<div class="c up">
-  <div class="bx">
-    <div class="dt">Pre-Contact Era</div>
-    <div class="tt">The Middlemen Traders</div>
-    <div class="bd">Trade was central to their world: they operated as middlemen across the Sea of Okhotsk, moving goods between Honshu to the south and Sakhalin and the Kurils to the north and northeast. Their position between worlds — geographic and spiritual — defined them.</div>
+    <div class="bd">For thousands of years, they lived a traditional life as hunter-gatherers in the dense forests, with a lifestyle of hunting bears and deer, fishing for salmon, and gathering shellfish along the coast. Trade was also central to the Ainu, operating as the middlemen of regional trade across the Sea of Okhotsk, moving goods between the Honshu in the south to the people of Sakhalin and Kurils in north and north-east Asia.</div>
   </div>
 </div>
 
 <span class="gap"></span>
 
-<!-- ═══ MOREU ═══ -->
-<div class="c dn">
-  <div class="bx">
-    <div class="dt">Timeless</div>
-    <div class="tt">The Moreu Spiral</div>
-    <div class="bd">When an Ainu craftsman made a prayer tool, he started with a stick. He didn't carve it into a new shape — he shaved it, peeling back thin curls of wood so they spiraled upward from the shaft like smoke rising, or like a fern uncurling in spring. These were <em>inaw</em> — prayer sticks — and the shavings didn't fall away. They stayed attached, coiling outward, becoming the prayer itself. Wood becoming curl. Material becoming spirit.</div>
-  </div>
+<!-- ═══════════════════════════════════
+     SECTION 3: CONTACT & REVOLTS
+     BG: Coast / mountains
+     ═══════════════════════════════════ -->
+<div class="bg" data-speed="0.35">
+  <img src="images/bg_coast.jpg" alt="">
 </div>
 
-<div class="img-panel up">
-  <img src="images/jstor_knife_sheath_12621271.jpg" alt="Makiri knife sheath with moreu">
-  <span class="cap">Makiri knife sheath · Peabody Museum</span>
-</div>
-
-<!-- ═══ THE SPIRAL SPREADS ═══ -->
-<div class="c up">
-  <div class="bx">
-    <div class="dt">Timeless</div>
-    <div class="tt">The Spiral Spreads</div>
-    <div class="bd">That curl — that moreu — moved from the inaw onto everything the Ainu touched. Women stitched it in white thread on dark robes, working the spiral into bands of embroidery that ran down sleeves and hems. Men cut it into knife sheaths and headbands. The same shape, repeated until it was no longer decoration. It was language. It was identity. It was proof that the world spirals back toward itself, that nothing ends in a straight line.</div>
-  </div>
-</div>
-
-<div class="img-panel dn">
-  <img src="images/brooklyn_matanpushi_12550.jpg" alt="Matanpushi headband with moreu">
-  <span class="cap">Matanpushi headband · Brooklyn Museum</span>
-</div>
-
-<span class="gap"></span>
-
-<!-- ═══ MATSUMAE ═══ -->
 <div class="c dn loss">
   <div class="bx">
     <div class="dt">1600s</div>
     <div class="tt">The Matsumae Clan</div>
-    <div class="bd">Japanese influence tightened with the establishment of the Matsumae clan's trading outpost in southern Hokkaido. The clan controlled access to rice, sake, iron, and cotton — demanding furs and fish in return, exploiting the Ainu through unequal trade that grew more coercive with each decade.</div>
+    <div class="bd">In the 1600s, Japanese influence was already apparent with the establishment of the Matsumae clan's trading outpost in the north of Hokkaido, where they exploited the Ainu, controlling access to rice, sake, iron, and cotton while demanding furs and fish in return.</div>
   </div>
 </div>
 
-<!-- ═══ SHAKUSHAIN ═══ -->
 <div class="c up hope">
   <div class="bx">
     <div class="dt">1669</div>
     <div class="tt">Shakushain's Revolt</div>
-    <div class="bd">The chief <em>Shakushain</em> united Ainu communities across Hokkaido to lead a violent revolt against their trade overlords. The uprising was crushed through treachery — Shakushain was killed during what were supposed to be peace negotiations.</div>
+    <div class="bd">In 1699, the chief Shakushain united Ainu communities across Hokkaido to lead a violent revolt against their trade overlords. However, this attempt was swiftly crushed with treachery, when Shakushain was killed during peace negotiations.</div>
   </div>
 </div>
 
-<!-- ═══ KUNASHIRI ═══ -->
+<!-- ═══════════════════════════════════
+     BG: Dark mountains
+     ═══════════════════════════════════ -->
+<div class="bg" data-speed="0.3">
+  <img src="images/bg_mountains.jpg" alt="">
+</div>
+
 <div class="c dn hope">
   <div class="bx">
     <div class="dt">1789</div>
-    <div class="tt">Kunashiri-Menashi Revolt</div>
-    <div class="bd">A second major rebellion erupted at Kunashiri-Menashi under an even more cruel regime. It also failed, this time due to internal betrayals. By the end of the 18th century, the Ainu had lost control over almost all of their ancestral territory.</div>
+    <div class="tt">Kunashiri-Menashi</div>
+    <div class="bd">In 1789, a second attempt at Kunashiri-Menashi under an even more cruel regime also failed, due to internal betrayals. By the eighteenth century, the Ainu had lost control over almost all of their ancestral territory.</div>
   </div>
 </div>
 
 <span class="gap"></span>
 
-<!-- ═══ MEIJI ═══ -->
+<!-- ═══════════════════════════════════
+     SECTION 4: ANNEXATION
+     BG: Snow forest
+     ═══════════════════════════════════ -->
+<div class="bg" data-speed="0.2">
+  <img src="images/bg_snow_forest.jpg" alt="">
+</div>
+
 <div class="c up loss">
   <div class="bx">
     <div class="dt">1869</div>
     <div class="tt">Meiji Annexation</div>
-    <div class="bd">In 1869, Japan annexed Hokkaido. What followed was systematic erasure. Ainu land was seized and redistributed to Japanese settlers. Children were sent to schools where speaking Ainu meant punishment. The great bear ceremony, <em>Iomante</em>, was banned in 1955. Artifacts were confiscated. Some were destroyed. Some ended up in foreign museums, labeled <em>primitive</em> and <em>exotic</em>, stripped of their names.</div>
+    <div class="bd">When the Meiji government officially annexed Hokkaido in 1869, the Ainu had already fought for generations for their land (Fitzhugh and Dubreuil).</div>
   </div>
 </div>
 
-<!-- ═══ NEAR EXTINCTION ═══ -->
-<div class="c dn loss">
+<span class="gap"></span>
+
+<!-- ═══════════════════════════════════
+     SECTION 5: WORLDVIEW
+     BG: Fire
+     ═══════════════════════════════════ -->
+<div class="bg" data-speed="0.28">
+  <img src="images/bg_fire.jpg" alt="">
+</div>
+
+<div class="c dn">
   <div class="bx">
-    <div class="dt">20th Century</div>
-    <div class="tt">Near Extinction</div>
-    <div class="bd">Japan tried to make the Ainu disappear. And it nearly worked. Today, fewer than ten native speakers of the Ainu language remain. The traditional hunting grounds are gone. The ceremonies are gone. The bear rituals are gone. By almost every measure used by linguists and anthropologists, the Ainu are one of the closest cases of <em>cultural extinction</em> in the modern world.</div>
+    <div class="dt">Worldview</div>
+    <div class="tt">Aynu Mosir &amp; Kamuy Mosir</div>
+    <div class="bd">The Ainu worldview is composed of aynu Mosir, the realm of human beings; and kamuy Mosir, the realm of spirits (Utagawa). Everything alive was believed to have a Spirit, Kamuy, and everything in the mortal world, including animals, plants, and even elements were understood as Gods wearing a physical form. When a bear is killed, the Iyomante ceremony is performed so that the spirit is returned to the god's realm with gratitude, in which the kamuy can choose to visit again.</div>
   </div>
 </div>
 
-<div class="img-panel up">
-  <img src="images/met_robe_65614_main.jpg" alt="Ainu robe detail">
-  <span class="cap">Ainu robe · The Metropolitan Museum of Art</span>
-</div>
-
-<!-- ═══ BUT ═══ -->
-<div class="c up hope">
+<div class="c up">
   <div class="bx">
-    <div class="dt">Still</div>
-    <div class="tt">What Extinction Cannot Do</div>
-    <div class="bd">But here is what cultural extinction cannot do: it cannot reach inside a hand. Any Ainu woman with a needle and thread can stitch the moreu onto a new cloth. Any Ainu man with a blade can shave a fresh curl onto a plain stick. You can burn the robe. You can break the prayer stick. You can clear-cut the forest until there is nothing left but stumps. But you cannot confiscate muscle memory. You cannot arrest the knowledge that lives in fingers. The moreu survived because it never lived in objects. It lived in <em>people</em>.</div>
+    <div class="dt">Sacred Symbols</div>
+    <div class="tt">Moreu &amp; Aiushi</div>
+    <div class="bd">The sacred symbol at the center of Ainu culture is the moreu, a spiral shape that appears on every item in this exhibit. The second sacred symbol is the thorned barbs called the aiushi. These two symbols carry power. They are the only two design elements in Ainu art. When they are placed on the opening of clothes or tools, it serves to form spiritual protection called sermaka omare, which means sealing gaps where evil forces can enter. Traditionally, men carried inaw(s) prayer wands made from shaving willow while women wore ceremonial robes from elm bark meant to protect the wearer (Hunger)(Fitzhugh and Dubreuil).</div>
   </div>
 </div>
 
@@ -341,59 +301,58 @@
 <script>
 (function(){
   var r=document.getElementById('river'),bar=document.getElementById('bar');
+  var bgs=document.querySelectorAll('.bg img');
 
-  // Wheel → horizontal
+  // ── Wheel → horizontal ──
   r.addEventListener('wheel',function(e){
     e.preventDefault();
-    // Smooth momentum
-    r.scrollLeft+=(e.deltaY!==0?e.deltaY:e.deltaX)*1.8;
+    r.scrollLeft+=(e.deltaY!==0?e.deltaY:e.deltaX)*2;
   },{passive:false});
 
-  // Drag
-  var drag=false,sx=0,sl=0,vx=0,lastX=0,raf=0;
-  r.addEventListener('mousedown',function(e){drag=true;sx=e.clientX;sl=r.scrollLeft;vx=0;lastX=e.clientX;cancelAnimationFrame(raf)});
+  // ── Drag with momentum ──
+  var drag=false,sx=0,sl=0,vx=0,lx=0,raf=0;
+  r.addEventListener('mousedown',function(e){drag=true;sx=e.clientX;sl=r.scrollLeft;vx=0;lx=e.clientX;cancelAnimationFrame(raf)});
   window.addEventListener('mouseup',function(){
     if(!drag)return;drag=false;
-    // Momentum coast
-    function coast(){
-      if(Math.abs(vx)<0.5)return;
-      r.scrollLeft-=vx;
-      vx*=0.92;
+    (function coast(){
+      if(Math.abs(vx)<.4)return;
+      r.scrollLeft-=vx;vx*=.93;
       raf=requestAnimationFrame(coast);
-    }
-    coast();
+    })();
   });
   r.addEventListener('mousemove',function(e){
     if(!drag)return;e.preventDefault();
-    var dx=e.clientX-sx;
-    r.scrollLeft=sl-dx;
-    vx=e.clientX-lastX;
-    lastX=e.clientX;
+    r.scrollLeft=sl-(e.clientX-sx);
+    vx=e.clientX-lx;lx=e.clientX;
   });
 
-  // Touch drag (mobile)
+  // ── Touch ──
   var tsx=0,tsl=0;
   r.addEventListener('touchstart',function(e){tsx=e.touches[0].clientX;tsl=r.scrollLeft},{passive:true});
-  r.addEventListener('touchmove',function(e){
-    r.scrollLeft=tsl-(e.touches[0].clientX-tsx);
-  },{passive:true});
+  r.addEventListener('touchmove',function(e){r.scrollLeft=tsl-(e.touches[0].clientX-tsx)},{passive:true});
 
-  // Progress
+  // ── Parallax backgrounds + progress ──
   r.addEventListener('scroll',function(){
     var max=r.scrollWidth-r.clientWidth;
-    bar.style.width=(max>0?r.scrollLeft/max*100:0)+'%';
+    var pct=max>0?r.scrollLeft/max:0;
+    bar.style.width=(pct*100)+'%';
+
+    // Parallax: background images move slower
+    bgs.forEach(function(img){
+      var speed=parseFloat(img.parentElement.getAttribute('data-speed'))||0.3;
+      var rect=img.parentElement.getBoundingClientRect();
+      var offset=(rect.left/window.innerWidth)*-60*speed;
+      img.style.transform='translateX('+offset+'px)';
+    });
   });
 
-  // Fade-in with stagger
-  var els=document.querySelectorAll('.c,.img-panel');
+  // ── Fade-in ──
+  var els=document.querySelectorAll('.c');
   var io=new IntersectionObserver(function(entries){
     entries.forEach(function(en){
-      if(en.isIntersecting){
-        en.target.classList.add('show');
-        io.unobserve(en.target);
-      }
+      if(en.isIntersecting){en.target.classList.add('show');io.unobserve(en.target)}
     });
-  },{root:r,threshold:0.08,rootMargin:'0px 80px 0px 0px'});
+  },{root:r,threshold:0.08,rootMargin:'0px 100px 0px 0px'});
   els.forEach(function(el){io.observe(el)});
 })();
 </script>
