@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ainu History Timeline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #1a1a18;
+    color: #e8e0d4;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  .timeline-header {
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+    position: relative;
+  }
+
+  .timeline-header h1 {
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 600;
+    color: #d4a574;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-header p {
+    font-size: 0.95rem;
+    color: #a09888;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* ─── Timeline Container ─── */
+  .timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 2rem 6rem;
+  }
+
+  /* Central vertical line */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 32px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      #d4a57440 5%,
+      #d4a57440 95%,
+      transparent 100%
+    );
+  }
+
+  /* ─── Individual Event ─── */
+  .event {
+    position: relative;
+    padding-left: 72px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .event.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Timeline dot */
+  .event::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #1a1a18;
+    border: 2px solid #d4a574;
+    z-index: 2;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .event:hover::before {
+    background: #d4a574;
+    box-shadow: 0 0 12px #d4a57480;
+  }
+
+  /* Era markers (special larger dots) */
+  .event.era::before {
+    width: 22px;
+    height: 22px;
+    left: 22px;
+    background: #d4a574;
+    box-shadow: 0 0 16px #d4a57440;
+  }
+
+  .event-date {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #d4a574;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.02em;
+  }
+
+  .event-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f0e8dc;
+    margin-bottom: 0.4rem;
+  }
+
+  .event-body {
+    font-size: 0.9rem;
+    color: #b8b0a4;
+    max-width: 620px;
+    line-height: 1.75;
+  }
+
+  .event-body em {
+    color: #d4a574;
+    font-style: italic;
+  }
+
+  /* ─── Separator line between eras ─── */
+  .era-break {
+    position: relative;
+    padding-left: 72px;
+    margin: 2.5rem 0;
+    height: 1px;
+  }
+
+  .era-break::after {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(to right, #d4a57440, transparent);
+  }
+
+  /* ─── Resistance / hope events ─── */
+  .event.hope::before {
+    border-color: #7ab08a;
+  }
+
+  .event.hope:hover::before {
+    background: #7ab08a;
+    box-shadow: 0 0 12px #7ab08a80;
+  }
+
+  .event.hope .event-date {
+    color: #7ab08a;
+  }
+
+  .event.hope .event-body em {
+    color: #7ab08a;
+  }
+
+  /* ─── Destruction events ─── */
+  .event.loss::before {
+    border-color: #c47a6a;
+  }
+
+  .event.loss:hover::before {
+    background: #c47a6a;
+    box-shadow: 0 0 12px #c47a6a80;
+  }
+
+  .event.loss .event-date {
+    color: #c47a6a;
+  }
+
+  /* ─── Scroll indicator ─── */
+  .scroll-hint {
+    text-align: center;
+    padding: 1rem;
+    color: #a09888;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .scroll-hint svg {
+    display: block;
+    margin: 0.5rem auto 0;
+    width: 20px;
+    height: 20px;
+    stroke: #a09888;
+  }
+
+  /* ─── Mobile adjustments ─── */
+  @media (max-width: 600px) {
+    .timeline::before { left: 20px; }
+    .event { padding-left: 52px; }
+    .event::before { left: 12px; width: 16px; height: 16px; }
+    .event.era::before { left: 10px; width: 20px; height: 20px; }
+    .timeline-header { padding: 3rem 1.5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="timeline-header">
+  <h1>History &amp; Timeline</h1>
+  <p>Ten thousand years of the Ainu, from origin to resistance</p>
+  <div class="scroll-hint">
+    Scroll
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</div>
+
+<div class="timeline">
+
+  <!-- ═══ ORIGINS ═══ -->
+  <div class="event era">
+    <div class="event-date">~13,000 BCE</div>
+    <div class="event-title">Jōmon Origins</div>
+    <div class="event-body">The Jōmon people — ancestors of the Ainu — inhabit the Japanese archipelago as hunter-gatherers, producing some of the world's earliest pottery. On the northern island of Hokkaido, communities remain isolated from the cultural mixing occurring farther south on Honshu.</div>
+  </div>
+
+  <div class="event">
+    <div class="event-date">~300 BCE – 700 CE</div>
+    <div class="event-title">The Yayoi Migration</div>
+    <div class="event-body">When Jōmon communities on Honshu began to mix with the Yayoi people from the Korean Peninsula, the northern Jōmon communities remained isolated. Wet-rice agriculture and bronze tools transformed the south, but the north held to older ways — fishing, foraging, hunting.</div>
+  </div>
+
+  <div class="event">
+    <div class="event-date">7th – 13th Century</div>
+    <div class="event-title">The Satsumon &amp; Okhotsk Merge</div>
+    <div class="event-body">The Satsumon culture (descended from northern Jōmon) merged with the Okhotsk culture arriving from Sakhalin and the Sea of Okhotsk coast. From this fusion, the Ainu emerged as a distinct people — with their own language, spiritual practices, and material culture rooted in the forests and rivers of Hokkaido.</div>
+  </div>
+
+  <div class="era-break"></div>
+
+  <!-- ═══ TRADITIONAL LIFE ═══ -->
+  <div class="event era">
+    <div class="event-date">Pre-Contact Era</div>
+    <div class="event-title">Life in the Forest</div>
+    <div class="event-body">For thousands of years, the Ainu lived as hunter-gatherers in the dense forests of Hokkaido — hunting bears and deer, fishing for salmon, gathering shellfish along the coast. Trade was central to their world: they operated as middlemen across the Sea of Okhotsk, moving goods between Honshu to the south and Sakhalin and the Kurils to the north and northeast.</div>
+  </div>
+
+  <div class="era-break"></div>
+
+  <!-- ═══ CONTACT & EXPLOITATION ═══ -->
+  <div class="event loss">
+    <div class="event-date">1600s</div>
+    <div class="event-title">The Matsumae Clan</div>
+    <div class="event-body">Japanese influence tightened with the establishment of the Matsumae clan's trading outpost in southern Hokkaido. The clan controlled access to rice, sake, iron, and cotton — demanding furs and fish in return, exploiting the Ainu through unequal trade that grew more coercive with each decade.</div>
+  </div>
+
+  <div class="event hope">
+    <div class="event-date">1669</div>
+    <div class="event-title">Shakushain's Revolt</div>
+    <div class="event-body">The chief <em>Shakushain</em> united Ainu communities across Hokkaido to lead a violent revolt against their trade overlords. The uprising was crushed through treachery — Shakushain was killed during what were supposed to be peace negotiations. The first organized resistance, and the first betrayal.</div>
+  </div>
+
+  <div class="event hope">
+    <div class="event-date">1789</div>
+    <div class="event-title">Kunashiri-Menashi Revolt</div>
+    <div class="event-body">A second major rebellion erupted at Kunashiri-Menashi under an even more cruel regime. It also failed, this time due to internal betrayals. By the end of the 18th century, the Ainu had lost control over almost all of their ancestral territory.</div>
+  </div>
+
+  <div class="era-break"></div>
+
+  <!-- ═══ COLONIZATION ═══ -->
+  <div class="event era loss">
+    <div class="event-date">1869</div>
+    <div class="event-title">Meiji Annexation of Hokkaido</div>
+    <div class="event-body">The Meiji government officially annexed Hokkaido, renaming it from <em>Ezo</em> — the Ainu homeland — and launching a systematic colonization campaign. The Ainu had already fought for generations for their land. Now it was taken by decree.</div>
+  </div>
+
+  <div class="event loss">
+    <div class="event-date">1899</div>
+    <div class="event-title">Former Aborigines Protection Act</div>
+    <div class="event-body">Japan passed the "Hokkaido Former Aborigines Protection Act," forcibly assimilating the Ainu. Ainu children were sent to Japanese-language schools where speaking Ainu meant punishment. Traditional practices were discouraged or banned. Ainu land was redistributed to Japanese settlers.</div>
+  </div>
+
+  <div class="event loss">
+    <div class="event-date">1955</div>
+    <div class="event-title">Iyomante Banned</div>
+    <div class="event-body">The <em>Iyomante</em> — the sacred bear-sending ceremony, one of the most important Ainu spiritual practices — was banned by authorities. Artifacts were confiscated. Some were destroyed. Others ended up in foreign museums, labeled <em>primitive</em> and <em>exotic</em>, stripped of their Ainu names.</div>
+  </div>
+
+  <div class="era-break"></div>
+
+  <!-- ═══ REVIVAL ═══ -->
+  <div class="event hope">
+    <div class="event-date">2008</div>
+    <div class="event-title">Indigenous Recognition (Diet Resolution)</div>
+    <div class="event-body">The Japanese Diet passed a non-binding resolution recognizing the Ainu as an Indigenous people of Japan — a symbolic but significant first step after over a century of denial.</div>
+  </div>
+
+  <div class="event era hope">
+    <div class="event-date">2019</div>
+    <div class="event-title">Ainu Promotion Act</div>
+    <div class="event-body">Japan finally passed legislation legally recognizing the Ainu as Indigenous — 150 years after annexation. The law acknowledged historical discrimination and promoted Ainu culture, though critics noted it lacked land rights or self-determination provisions.</div>
+  </div>
+
+  <div class="event hope">
+    <div class="event-date">2020</div>
+    <div class="event-title">Upopoy National Ainu Museum Opens</div>
+    <div class="event-body">The <em>Upopoy</em> National Ainu Museum and Park opened in Shiraoi, Hokkaido — the first national institution dedicated to Ainu history and culture. The spiral is still being stitched. Still being shaved. Still coiling upward from new hands into new cloth.</div>
+  </div>
+
+  <div class="event hope">
+    <div class="event-date">Today</div>
+    <div class="event-title">The Spiral Endures</div>
+    <div class="event-body">Fewer than ten native speakers of the Ainu language remain. The traditional hunting grounds are gone. But Ainu communities continue efforts to revitalize their language, practices, and arts. The <em>moreu</em> — the sacred spiral — was never lost. It was just waiting.</div>
+  </div>
+
+</div>
+
+<script>
+  // Intersection Observer for scroll-triggered fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.event').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
