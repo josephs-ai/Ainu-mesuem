@@ -12,10 +12,9 @@
   html,body{
     width:100%;height:100%;overflow:hidden;
     font-family:'Inter',sans-serif;
-    background:#0a0a09;color:#e8e0d4;
+    background:#111110;color:#e8e0d4;
   }
 
-  /* ── Fixed UI ── */
   header{
     position:fixed;top:0;left:0;z-index:60;width:100%;
     padding:1.3rem 2.2rem;
@@ -39,9 +38,6 @@
   .prog{position:fixed;bottom:0;left:0;width:100%;height:3px;background:#1a1a18;z-index:60}
   .prog span{display:block;height:100%;width:0;background:linear-gradient(90deg,#d4a574,#a08060);transition:width .06s linear}
 
-  /* ══════════════════════════════
-     RIVER — horizontal scroller
-     ══════════════════════════════ */
   #river{
     position:absolute;top:0;left:0;width:100%;height:100%;
     overflow-x:scroll;overflow-y:hidden;
@@ -52,45 +48,13 @@
   #river:active{cursor:grabbing}
   #river::-webkit-scrollbar{height:0}
 
-  /* ── Rail ── */
   .rail{
     position:fixed;top:50%;left:0;width:100%;height:1px;
-    background:#d4a57415;pointer-events:none;z-index:2;
+    background:#d4a57418;pointer-events:none;z-index:2;
   }
 
-  .sp{display:inline-block;width:8vw;height:1px;vertical-align:top}
+  .sp{display:inline-block;width:10vw;height:1px;vertical-align:top}
 
-  /* ══════════════════════════════
-     BACKGROUND IMAGE PANELS
-     — tall strips that scroll with content
-     ══════════════════════════════ */
-  .bg{
-    display:inline-block;
-    vertical-align:top;
-    width:100vw;
-    height:100vh;
-    position:relative;
-    overflow:hidden;
-  }
-  .bg img{
-    position:absolute;top:0;left:0;
-    width:110%;height:100%;
-    object-fit:cover;
-    filter:brightness(.22) saturate(.6);
-    transform:translateX(0);
-    transition:none;
-    pointer-events:none;
-  }
-  /* Gradient fades on edges */
-  .bg::before,.bg::after{
-    content:'';position:absolute;top:0;height:100%;width:18vw;z-index:1;pointer-events:none;
-  }
-  .bg::before{left:0;background:linear-gradient(90deg,#0a0a09,transparent)}
-  .bg::after{right:0;background:linear-gradient(270deg,#0a0a09,transparent)}
-
-  /* ══════════════════════════════
-     CARDS — sit on top of backgrounds
-     ══════════════════════════════ */
   .c{
     display:inline-block;vertical-align:top;
     white-space:normal;
@@ -131,7 +95,6 @@
   .c.hope .bx{border-color:rgba(122,176,138,.12)}
   .c.hope:hover .bx{border-color:rgba(122,176,138,.3)}
 
-  /* ── Gap dot ── */
   .gap{
     display:inline-block;width:28px;height:10px;
     vertical-align:top;margin-top:calc(50vh - 5px);
@@ -146,7 +109,6 @@
 
   @media(max-width:700px){
     .c{width:280px;margin:0 20px}
-    .bg{width:120vw}
   }
 </style>
 </head>
@@ -154,7 +116,7 @@
 
 <header>
   <h1>History &amp; Timeline</h1>
-  <p>Scroll to journey through ten thousand years of the Ainu</p>
+  <p>Scroll to journey through the history of the Ainu</p>
 </header>
 
 <div class="hint">
@@ -167,14 +129,6 @@
 
 <div id="river">
 <span class="sp"></span>
-
-<!-- ═══════════════════════════════════
-     SECTION 1: ORIGINS
-     BG: Ancient forest
-     ═══════════════════════════════════ -->
-<div class="bg" data-speed="0.3">
-  <img src="images/bg1_hokkaido_forest.jpg" alt="">
-</div>
 
 <div class="c up">
   <div class="bx">
@@ -194,14 +148,6 @@
 
 <span class="gap"></span>
 
-<!-- ═══════════════════════════════════
-     SECTION 2: LIFE IN THE FOREST
-     BG: Misty forest
-     ═══════════════════════════════════ -->
-<div class="bg" data-speed="0.25">
-  <img src="images/bg2_shrine_forest.jpg" alt="">
-</div>
-
 <div class="c up">
   <div class="bx">
     <div class="dt">Pre-Contact</div>
@@ -211,14 +157,6 @@
 </div>
 
 <span class="gap"></span>
-
-<!-- ═══════════════════════════════════
-     SECTION 3: CONTACT & REVOLTS
-     BG: Coast / mountains
-     ═══════════════════════════════════ -->
-<div class="bg" data-speed="0.35">
-  <img src="images/bg3_japan_coast.jpg" alt="">
-</div>
 
 <div class="c dn loss">
   <div class="bx">
@@ -236,13 +174,6 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════
-     BG: Dark mountains
-     ═══════════════════════════════════ -->
-<div class="bg" data-speed="0.3">
-  <img src="images/bg5_dark_storm.jpg" alt="">
-</div>
-
 <div class="c dn hope">
   <div class="bx">
     <div class="dt">1789</div>
@@ -253,45 +184,11 @@
 
 <span class="gap"></span>
 
-<!-- ═══════════════════════════════════
-     SECTION 4: ANNEXATION
-     BG: Snow forest
-     ═══════════════════════════════════ -->
-<div class="bg" data-speed="0.2">
-  <img src="images/bg4_hokkaido_snow.jpg" alt="">
-</div>
-
 <div class="c up loss">
   <div class="bx">
     <div class="dt">1869</div>
     <div class="tt">Meiji Annexation</div>
     <div class="bd">When the Meiji government officially annexed Hokkaido in 1869, the Ainu had already fought for generations for their land (Fitzhugh and Dubreuil).</div>
-  </div>
-</div>
-
-<span class="gap"></span>
-
-<!-- ═══════════════════════════════════
-     SECTION 5: WORLDVIEW
-     BG: Fire
-     ═══════════════════════════════════ -->
-<div class="bg" data-speed="0.28">
-  <img src="images/bg6_hearth_fire.jpg" alt="">
-</div>
-
-<div class="c dn">
-  <div class="bx">
-    <div class="dt">Worldview</div>
-    <div class="tt">Aynu Mosir &amp; Kamuy Mosir</div>
-    <div class="bd">The Ainu worldview is composed of aynu Mosir, the realm of human beings; and kamuy Mosir, the realm of spirits (Utagawa). Everything alive was believed to have a Spirit, Kamuy, and everything in the mortal world, including animals, plants, and even elements were understood as Gods wearing a physical form. When a bear is killed, the Iyomante ceremony is performed so that the spirit is returned to the god's realm with gratitude, in which the kamuy can choose to visit again.</div>
-  </div>
-</div>
-
-<div class="c up">
-  <div class="bx">
-    <div class="dt">Sacred Symbols</div>
-    <div class="tt">Moreu &amp; Aiushi</div>
-    <div class="bd">The sacred symbol at the center of Ainu culture is the moreu, a spiral shape that appears on every item in this exhibit. The second sacred symbol is the thorned barbs called the aiushi. These two symbols carry power. They are the only two design elements in Ainu art. When they are placed on the opening of clothes or tools, it serves to form spiritual protection called sermaka omare, which means sealing gaps where evil forces can enter. Traditionally, men carried inaw(s) prayer wands made from shaving willow while women wore ceremonial robes from elm bark meant to protect the wearer (Hunger)(Fitzhugh and Dubreuil).</div>
   </div>
 </div>
 
@@ -301,15 +198,12 @@
 <script>
 (function(){
   var r=document.getElementById('river'),bar=document.getElementById('bar');
-  var bgs=document.querySelectorAll('.bg img');
 
-  // ── Wheel → horizontal ──
   r.addEventListener('wheel',function(e){
     e.preventDefault();
     r.scrollLeft+=(e.deltaY!==0?e.deltaY:e.deltaX)*2;
   },{passive:false});
 
-  // ── Drag with momentum ──
   var drag=false,sx=0,sl=0,vx=0,lx=0,raf=0;
   r.addEventListener('mousedown',function(e){drag=true;sx=e.clientX;sl=r.scrollLeft;vx=0;lx=e.clientX;cancelAnimationFrame(raf)});
   window.addEventListener('mouseup',function(){
@@ -326,27 +220,15 @@
     vx=e.clientX-lx;lx=e.clientX;
   });
 
-  // ── Touch ──
   var tsx=0,tsl=0;
   r.addEventListener('touchstart',function(e){tsx=e.touches[0].clientX;tsl=r.scrollLeft},{passive:true});
   r.addEventListener('touchmove',function(e){r.scrollLeft=tsl-(e.touches[0].clientX-tsx)},{passive:true});
 
-  // ── Parallax backgrounds + progress ──
   r.addEventListener('scroll',function(){
     var max=r.scrollWidth-r.clientWidth;
-    var pct=max>0?r.scrollLeft/max:0;
-    bar.style.width=(pct*100)+'%';
-
-    // Parallax: background images move slower
-    bgs.forEach(function(img){
-      var speed=parseFloat(img.parentElement.getAttribute('data-speed'))||0.3;
-      var rect=img.parentElement.getBoundingClientRect();
-      var offset=(rect.left/window.innerWidth)*-60*speed;
-      img.style.transform='translateX('+offset+'px)';
-    });
+    bar.style.width=(max>0?r.scrollLeft/max*100:0)+'%';
   });
 
-  // ── Fade-in ──
   var els=document.querySelectorAll('.c');
   var io=new IntersectionObserver(function(entries){
     entries.forEach(function(en){
